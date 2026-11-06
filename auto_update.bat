@@ -2,6 +2,9 @@
 chcp 65001 >nul
 setlocal
 
+set PYTHONIOENCODING=utf-8
+set PYTHONUTF8=1
+
 set PYTHON=D:\Application\python3.10\python.exe
 set LOG=D:\Git\cn2kr\auto_update.log
 
