@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-cn2kr 配图升级：把渐变 SVG 占位图换成 Wikimedia Commons 的真实照片。
+cn2kr 配图脚本：为内容自动配真实照片（Wikimedia Commons）。
+
+逻辑：扫描 content/articles/ 下所有 .md，只要配图还是 .svg（说明是 pipeline 刚生成、
+还没配真实照片的新文章），就用 DeepSeek 把标题翻译成英文检索词 → 搜图 → 下载 → 更新 frontmatter。
+已经是 .jpg/.png 的文章自动跳过。
 
 用法：
-  python fetch_images.py --dry-run     # 只预览匹配结果，不下载
-  python fetch_images.py               # 真正下载并更新 frontmatter
+  python fetch_images.py --dry-run   # 只预览，不下载
+  python fetch_images.py             # 真正下载
 """
 import json
 import os
@@ -15,45 +19,57 @@ import time
 import urllib.parse
 import urllib.request
 
-CONTENT_DIR = "D:/Application/cn2kr-frontend/content/articles"
-IMAGE_DIR = "D:/Application/cn2kr-frontend/public/images"
+CONTENT_DIR = "D:/Git/cn2kr/frontend/content/articles"
+IMAGE_DIR = "D:/Git/cn2kr/frontend/public/images"
+CONFIG_PATH = "D:/Git/cn2kr/pipeline/config.json"
 UA = {"User-Agent": "cn2kr-image-fetcher/1.0 (personal project)"}
 
-# 文件名 -> 英文检索词（Wikimedia Commons 检索）
-QUERIES = {
-    "article-20261106-065727-340298": "Huawei smartphone",
-    "article-20261106-065740-530947": "smartphone display",
-    "article-20261106-065754-229467": "semiconductor wafer",
-    "article-20261106-065805-938459": "smartphone in hand",
-    "article-20261106-065819-492160": "electric car",
-    "article-20261106-065830-969665": "video editing",
-    "article-20261106-065844-129229": "data center",
-    "article-20261106-065856-994124": "mobile phone closeup",
-    "article-20261106-065908-499215": "smartwatch",
-    "article-20261106-065922-113140": "computer chip",
-    "article-20261106-065935-350281": "China high-speed railway",
-    "article-20261106-065951-056516": "Beijing Forbidden City",
-    "article-20261106-070005-378439": "Chongqing skyline",
-    "article-20261106-070021-082128": "Chinese street food",
-    "article-20261106-070037-696982": "Hangzhou West Lake",
-    "article-20261106-070050-674269": "hot pot",
-    "article-20261106-070102-506460": "Chinese dumplings",
-    "article-20261106-070115-180464": "Lijiang old town",
-    "article-20261106-070128-703384": "QR code mobile payment",
-    "article-20261106-070143-423482": "Terracotta Army",
-    "article-20261106-070153-048792": "online shopping",
-    "article-20261106-070205-129682": "luxury handbag",
-    "article-20261106-070216-184573": "sneakers",
-    "article-20261106-070227-939940": "credit card payment",
-    "article-20261106-070241-986671": "parcel",
-    "article-20261106-070255-514302": "container port",
-    "article-20261106-070309-995903": "container ship",
-    "article-20261106-070324-234816": "logistics warehouse",
-    "article-20261106-070337-363166": "shipping boxes",
-    "article-20261106-070350-684594": "factory manufacturing",
+GOOD_MIME = {"image/jpeg", "image/png"}
+
+# DeepSeek 失败时的分类兜底检索词
+CATEGORY_FALLBACK = {
+    "중국 테크": "China technology",
+    "중국 여행": "China travel landmark",
+    "중국 직구": "online shopping parcel",
 }
 
-GOOD_MIME = {"image/jpeg", "image/png"}
+
+def load_config():
+    with open(CONFIG_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def call_deepseek(prompt):
+    cfg = load_config()
+    body = json.dumps({
+        "model": cfg.get("model", "deepseek-chat"),
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.3,
+    }).encode("utf-8")
+    url = cfg["deepseek_base_url"].rstrip("/") + "/chat/completions"
+    req = urllib.request.Request(url, data=body, headers={
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + cfg["deepseek_api_key"],
+    })
+    resp = json.loads(urllib.request.urlopen(req, timeout=60).read().decode("utf-8"))
+    return resp["choices"][0]["message"]["content"].strip()
+
+
+def derive_query(title, category):
+    """韩文标题 → 英文图片检索词（DeepSeek，失败则用分类兜底）"""
+    prompt = (
+        "把下面这个韩文文章标题翻译成一个简短的英文图片搜索关键词（3~6 个英文单词，"
+        "适合在图片库搜相关照片）。只输出关键词本身，不要解释、不要标点、不要引号。\n\n"
+        f"标题：{title}\n分类：{category}\n\n关键词："
+    )
+    try:
+        q = call_deepseek(prompt)
+        q = q.strip().strip('"').strip("'").strip()
+        if q and len(q) <= 60:
+            return q
+    except Exception as e:
+        print(f"    [DeepSeek 翻译失败，用分类兜底] {e}")
+    return CATEGORY_FALLBACK.get(category, "China")
 
 
 def wm_search(query, limit=6, retries=4):
@@ -76,8 +92,7 @@ def wm_search(query, limit=6, retries=4):
                 return json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
-                wait = 3 * (attempt + 1)
-                time.sleep(wait)
+                time.sleep(3 * (attempt + 1))
                 continue
             raise
         except Exception:
@@ -98,7 +113,6 @@ def pick_candidate(query):
     pages = (data.get("query") or {}).get("pages", {})
     if not pages:
         return None
-    # 按 index 排序，优先 jpeg/png 且宽度足够的
     items = sorted(pages.values(), key=lambda p: p.get("index", 99))
     for p in items:
         ii = (p.get("imageinfo") or [{}])[0]
@@ -107,13 +121,11 @@ def pick_candidate(query):
         if mime in GOOD_MIME and w >= 800:
             thumb = ii.get("thumburl") or ii.get("url")
             return thumb, p.get("title", ""), mime, w
-    # 放宽：只要 jpeg/png，不管尺寸
     for p in items:
         ii = (p.get("imageinfo") or [{}])[0]
-        mime = ii.get("mime", "")
-        if mime in GOOD_MIME:
+        if ii.get("mime", "") in GOOD_MIME:
             thumb = ii.get("thumburl") or ii.get("url")
-            return thumb, p.get("title", ""), mime, ii.get("width", 0)
+            return thumb, p.get("title", ""), ii.get("mime", ""), ii.get("width", 0)
     return None
 
 
@@ -129,48 +141,72 @@ def download(url, dest):
 def main():
     dry = "--dry-run" in sys.argv
     mode = "DRY-RUN (预览)" if dry else "DOWNLOAD (下载)"
-    print(f"=== {mode} ===\n")
-    ok = fail = 0
-    for name in sorted(QUERIES):
-        query = QUERIES[name]
-        md_path = os.path.join(CONTENT_DIR, name + ".md")
-        if not os.path.exists(md_path):
-            print(f"[MISSING MD] {name}")
+    print(f"=== 配图脚本 {mode} ===\n")
+
+    # 扫描所有 .md，找出配图还是 .svg 的
+    todo = []
+    for f in sorted(os.listdir(CONTENT_DIR)):
+        if not f.endswith(".md"):
             continue
-        print(f"{name}\n   query: {query}")
-        time.sleep(1.2)  # Wikimedia 限速：每个搜索请求间隔
+        md_path = os.path.join(CONTENT_DIR, f)
+        with open(md_path, encoding="utf-8") as fh:
+            txt = fh.read()
+        m_img = re.search(r'image:\s*"([^"]+)"', txt)
+        img = m_img.group(1) if m_img else ""
+        if not img.lower().endswith(".svg"):
+            continue
+        m_title = re.search(r'title:\s*"([^"]+)"', txt)
+        m_cat = re.search(r'category:\s*"([^"]+)"', txt)
+        todo.append((
+            f[:-3],
+            m_title.group(1) if m_title else "",
+            m_cat.group(1) if m_cat else "",
+        ))
+
+    if not todo:
+        print("所有文章都已有真实配图，无需处理。")
+        return
+
+    print(f"待处理 {len(todo)} 篇（配图还是 SVG）\n")
+    ok = fail = 0
+    for name, title, cat in todo:
+        query = derive_query(title, cat)
+        print(f"{name}\n  标题: {title[:40]}\n  query: {query}")
+        time.sleep(1.2)  # Wikimedia 限速
         cand = pick_candidate(query)
         if not cand:
-            print("   -> 无匹配结果 ❌")
+            fb = CATEGORY_FALLBACK.get(cat)
+            if fb and fb != query:
+                print(f"   -> 精确词无结果，用分类兜底词重试: {fb}")
+                time.sleep(1.2)
+                cand = pick_candidate(fb)
+        if not cand:
+            print("   -> 无匹配结果，保留 SVG ❌")
             fail += 1
             continue
-        thumb, title, mime, w = cand
-        print(f"   -> {title} ({mime}, {w}px)")
+        thumb, wm_title, mime, w = cand
+        print(f"   -> {wm_title} ({mime}, {w}px)")
         if dry:
             ok += 1
             continue
-        # 下载
         ext = ".jpg" if mime == "image/jpeg" else ".png"
         dest = os.path.join(IMAGE_DIR, name + ext)
         try:
             nbytes = download(thumb, dest)
-            # 更新 frontmatter
-            with open(md_path, encoding="utf-8") as f:
-                txt = f.read()
+            md_path = os.path.join(CONTENT_DIR, name + ".md")
+            with open(md_path, encoding="utf-8") as fh:
+                txt = fh.read()
             new_img = f"/images/{name}{ext}"
             txt2, cnt = re.subn(
                 r'image:\s*"/images/[^"]+"', f'image: "{new_img}"', txt
             )
-            if cnt == 0:
-                print(f"   ⚠ frontmatter image 未替换成功")
-            with open(md_path, "w", encoding="utf-8") as f:
-                f.write(txt2)
-            print(f"   ✅ 已下载 {nbytes//1024}KB -> {new_img}")
+            with open(md_path, "w", encoding="utf-8") as fh:
+                fh.write(txt2)
+            print(f"   ✅ 已下载 {nbytes // 1024}KB -> {new_img}")
             ok += 1
         except Exception as e:
             print(f"   [DOWNLOAD ERROR] {e}")
             fail += 1
-        time.sleep(0.3)  # 礼貌限速
 
     print(f"\n=== 完成: {ok} 成功 / {fail} 失败 ===")
 
