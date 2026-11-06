@@ -299,6 +299,7 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   color: var(--ink);
   line-height: 1.4;
+  min-height: 2.8em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -308,6 +309,7 @@ img { max-width: 100%; display: block; }
   color: var(--muted);
   font-size: 13px;
   line-height: 1.6;
+  min-height: 3.2em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -318,8 +320,8 @@ img { max-width: 100%; display: block; }
 /* ============ 卡片变体：大小混排 ============ */
 /* 大卡 2×2 */
 .card--large { grid-column: span 2; grid-row: span 2; }
-.card--large .card-title { font-size: 1.4rem; -webkit-line-clamp: 3; }
-.card--large .card-excerpt { -webkit-line-clamp: 3; }
+.card--large .card-title { font-size: 1.4rem; -webkit-line-clamp: 3; min-height: 4.2em; }
+.card--large .card-excerpt { -webkit-line-clamp: 3; min-height: 4.8em; }
 .card--large .card-body { padding: 18px 20px 20px; }
 
 /* 宽卡 2×1（横排：图左文右） */
