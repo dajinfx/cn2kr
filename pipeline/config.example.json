@@ -1,0 +1,12 @@
+{
+  "deepseek_api_key": "sk-在这里填你的DeepSeek密钥",
+  "deepseek_base_url": "https://api.deepseek.com/v1",
+  "model": "deepseek-chat",
+  "sources": {
+    "baidu_hot": true,
+    "toutiao_hot": true,
+    "smzdm_rss": true
+  },
+  "output_dir": "D:/Git/cn2kr/frontend/content/articles",
+  "image_dir": "D:/Git/cn2kr/frontend/public/images"
+}
