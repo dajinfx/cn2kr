@@ -174,6 +174,7 @@ PROMPT = """당신은 중국 직구·여행·테크를 직접 경험해본 한�
 [출력 형식 — 이것만 출력]
 제목: [구체적이고 클릭하고 싶은 제목]
 설명: [한 줄 요약, 30자 이내]
+슬러그: [영문 키워드 슬러그, 소문자+하이픈만, 3~6단어, 예: china-high-speed-rail-guide]
 [본문]
 
 참고할 중국 실시간 정보:"""
@@ -211,13 +212,14 @@ def generate(items, category):
 
     title = grab("제목") or f"{category} 트렌드"
     desc = grab("설명") or ""
+    slug = grab("슬러그") or ""
 
     content = raw
-    for field in ("제목", "설명"):
+    for field in ("제목", "설명", "슬러그"):
         content = re.sub(rf"^{field}\s*[:：].*\n?", "", content, count=1, flags=re.M)
     content = content.strip()
 
-    return {"title": title, "category": category, "description": desc, "content": content}
+    return {"title": title, "category": category, "description": desc, "content": content, "slug": slug}
 
 
 # ---------------------------------------------------------------- 3. 配图（SVG 渐变）
@@ -245,9 +247,16 @@ def generate_svg(category, slug, image_dir):
 
 
 # ---------------------------------------------------------------- 4. 存 Markdown
-def slugify():
-    ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
-    return f"article-{ts}"
+def make_slug(raw_slug):
+    """把 DeepSeek 生成的英文关键词 slug 规范化；失败则回退时间戳"""
+    s = (raw_slug or "").strip().lower()
+    s = re.sub(r"[^a-z0-9\s-]", "", s)
+    s = re.sub(r"[\s_]+", "-", s)
+    s = re.sub(r"-+", "-", s).strip("-")
+    if not s:
+        ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        s = f"article-{ts}"
+    return s[:60]
 
 
 def save_markdown(article, image_url, slug):
@@ -300,9 +309,10 @@ def main():
             print(article["content"][:250] + "...")
             continue
 
-        slug = slugify()
+        slug = make_slug(article.get("slug"))
         image_url = generate_svg(category, slug, image_dir)
         path = save_markdown(article, image_url, slug)
+        print(f"✅ slug：{slug}")
         print(f"✅ 已保存：{path}")
         print(f"✅ 配图：{image_url}")
 
