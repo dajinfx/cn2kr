@@ -57,7 +57,10 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 15. ✅ **首页版面优化**：卡片去边框改柔和阴影 + 栏目标题 + 圆角加大
 16. ✅ **UAT/PRD 双环境**：`cn2kr.net`(main) + `uat.cn2kr.net`(uat)，两个独立 Pages 项目
 17. ✅ **每日自动更新**：Windows 计划任务 `cn2kr-daily`，每天 8 点跑 auto_update.bat（抓热点→生成→配图→git push→自动上线）
-18. 🔄 **待办**：Google 登录（表已预留 user_id）、评论审核后台、上广告、站内搜索、分页（文章攒到 ~100 篇时做，静态站需构建时预渲染 /page/N）
+18. ✅ **URL 改成英文关键词 slug**：pipeline 让 DeepSeek 生成英文 slug，`migrate_slugs.py` 迁移全部 35 篇 + 配图（`/articles/china-high-speed-rail-korean-tips` 这种，不再是时间戳）
+19. ✅ **搜索引擎收录**：Naver（등록+검증+sitemap）、Google（验证+sitemap）、Bing（验证）全部完成，验证文件在 `frontend/public/`（naver1f33f8...html、googlec611c4...html、BingSiteAuth.xml）
+20. ✅ **自然化文章**：字数随内容(300~2000)、正文多图(数量随内容)、敬语(합니다체+해요체禁반말)、去AI味
+21. 🔄 **待办**：Google/Bing 提交 sitemap 确认、Google 登录（表已预留 user_id）、评论审核后台、上广告、站内搜索、分页（~100篇时做）、关键词策略、内链建设
 
 ## UI 方向（用户明确要的）
 
