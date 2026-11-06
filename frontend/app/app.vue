@@ -3,7 +3,8 @@
     <NuxtRouteAnnouncer />
 
     <!-- UAT 测试环境横幅 -->
-    <div class="uat-banner">⚠️ UAT 테스트 환경 — 실제 운영 사이트(cn2kr.net)가 아닙니다</div>
+    <!-- UAT 测试环境横幅（仅 UAT 域名显示） -->
+    <div v-if="isUat" class="uat-banner">⚠️ UAT 테스트 환경 — 실제 운영 사이트(cn2kr.net)가 아닙니다</div>
 
     <!-- 顶部导航 -->
     <header class="header">
@@ -48,6 +49,13 @@
 import { CATEGORIES } from '~/composables/useCategories'
 
 const cats = CATEGORIES
+
+// 只在 UAT 域名显示测试横幅（生产域名自动隐藏）
+const isUat = computed(() => {
+  if (typeof window === 'undefined') return false
+  const h = window.location.hostname
+  return h === 'uat.cn2kr.net' || h === 'cn2kr-uat.pages.dev'
+})
 
 // 全局 SEO 基础：语言 + 标题模板 + 站点级结构化数据
 useHead({
