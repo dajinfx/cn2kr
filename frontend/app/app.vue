@@ -45,4 +45,31 @@
 import { CATEGORIES } from '~/composables/useCategories'
 
 const cats = CATEGORIES
+
+// 全局 SEO 基础：语言 + 标题模板 + 站点级结构化数据
+useHead({
+  htmlAttrs: { lang: 'ko' },
+  titleTemplate: (title) => (title ? `${title} — cn2kr` : 'cn2kr — 중국 테크·여행·직구'),
+  meta: [
+    {
+      name: 'description',
+      content: '중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다',
+    },
+    { property: 'og:site_name', content: 'cn2kr' },
+    { property: 'og:type', content: 'website' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'cn2kr',
+        url: 'https://cn2kr.net',
+        description: '중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다',
+      }),
+    },
+  ],
+})
 </script>

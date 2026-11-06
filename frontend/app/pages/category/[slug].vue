@@ -41,4 +41,11 @@ const posts = computed(() =>
     .filter((p) => p.meta?.category === catName.value)
     .sort((a, b) => (b.meta?.date || '').localeCompare(a.meta?.date || ''))
 )
+
+// 分类页 SEO
+useSeoMeta({
+  title: computed(() => `${catName.value} — cn2kr`),
+  description: computed(() => `${catName.value} 관련 중국 정보를 한국 시선으로 소개합니다.`),
+  ogUrl: computed(() => `https://cn2kr.net/category/${route.params.slug}`),
+})
 </script>

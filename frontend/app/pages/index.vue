@@ -72,4 +72,13 @@ const filteredPosts = computed(() => {
 const featured = computed(() => filteredPosts.value[0] || null)
 const gridPosts = computed(() => filteredPosts.value.slice(1))
 const featuredColor = computed(() => categoryColor(featured.value?.meta?.category))
+
+// 首页 SEO
+useSeoMeta({
+  title: 'cn2kr — 중국 테크·여행·직구',
+  description: '중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다. 중국 직구, 여행, 테크 실전 정보를 매일 업데이트합니다.',
+  ogTitle: 'cn2kr — 중국 테크·여행·직구',
+  ogDescription: '중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다.',
+  ogUrl: 'https://cn2kr.net',
+})
 </script>

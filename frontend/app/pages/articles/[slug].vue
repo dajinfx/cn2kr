@@ -47,4 +47,47 @@ const date = computed(() => {
     return d
   }
 })
+
+// 每篇文章独立 SEO 元标签（标题/描述/OG/结构化数据）
+const seoTitle = computed(() => post.value?.title || '')
+const seoDesc = computed(() => post.value?.description || '')
+const seoImage = computed(() =>
+  post.value?.meta?.image ? `https://cn2kr.net${post.value.meta.image}` : ''
+)
+const seoUrl = computed(() =>
+  post.value?.path ? `https://cn2kr.net${post.value.path}` : ''
+)
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDesc,
+  ogTitle: seoTitle,
+  ogDescription: seoDesc,
+  ogImage: seoImage,
+  ogUrl: seoUrl,
+  ogType: 'article',
+  articlePublishedTime: computed(() => post.value?.meta?.date || ''),
+})
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: computed(() =>
+        JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: seoTitle.value,
+          description: seoDesc.value,
+          image: seoImage.value || undefined,
+          datePublished: post.value?.meta?.date,
+          dateModified: post.value?.meta?.date,
+          author: { '@type': 'Organization', name: 'cn2kr' },
+          publisher: { '@type': 'Organization', name: 'cn2kr' },
+          mainEntityOfPage: seoUrl.value,
+        })
+      ),
+    },
+  ],
+})
 </script>
