@@ -69,6 +69,7 @@ useHead({
     { property: 'og:site_name', content: 'cn2kr' },
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'naver-site-verification', content: '5528fa2e3fdd838f3123f7bc5cbfa69a5b4c34a8' },
   ],
   script: [
     {
