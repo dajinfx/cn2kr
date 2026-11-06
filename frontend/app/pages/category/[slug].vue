@@ -5,7 +5,6 @@
       <div class="container">
         <span class="cat-hero-label">CATEGORY</span>
         <h1>{{ catName }}</h1>
-        <p class="cat-hero-count">{{ posts.length }}개의 글</p>
       </div>
     </section>
 
