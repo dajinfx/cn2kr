@@ -18,7 +18,7 @@
 
 ### 2. 建表（执行 schema）
 1. 左侧 **SQL Editor** → New query
-2. 把 `D:\Application\cn2kr\supabase\schema.sql` 的**全部内容**粘贴进去
+2. 把 `D:\Git\cn2kr\supabase\schema.sql` 的**全部内容**粘贴进去
 3. 点 **Run**
 
 > 这一步会创建 `likes`、`comments` 两张表 + 开启 RLS（行级安全）。
@@ -34,7 +34,7 @@
 ## 二、本地运行（可选）
 
 ```bash
-cd D:\Application\cn2kr-frontend
+cd D:\Git\cn2kr\frontend
 # 复制 .env.example 成 .env，填入上面拿到的两个值
 npm run dev
 ```
@@ -49,7 +49,7 @@ npm run dev
 
 1. 把 `cn2kr-frontend` 推到 GitHub（Cloudflare 也能连 GitLab）：
    ```bash
-   cd D:\Application\cn2kr-frontend
+   cd D:\Git\cn2kr\frontend
    git init
    git add .
    git commit -m "cn2kr initial"
@@ -70,7 +70,7 @@ npm run dev
 ### 方式 B：直接上传（不用 Git）
 
 ```bash
-cd D:\Application\cn2kr-frontend
+cd D:\Git\cn2kr\frontend
 # 构建时带上 Supabase key
 export NUXT_PUBLIC_SUPABASE_URL="https://xxxx.supabase.co"
 export NUXT_PUBLIC_SUPABASE_ANON_KEY="eyJ..."

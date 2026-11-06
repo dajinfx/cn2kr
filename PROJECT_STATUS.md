@@ -26,15 +26,15 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 
 | 东西 | 路径 |
 |------|------|
-| pipeline 脚本 | `D:\Application\cn2kr\pipeline.py` |
-| pipeline 配置 | `D:\Application\cn2kr\config.json`（含 DeepSeek key） |
-| 配图脚本 | `D:\Application\cn2kr\fetch_images.py`（Wikimedia Commons 真实照片） |
-| 前端项目 | `D:\Application\cn2kr-frontend\` |
-| 内容目录 | `D:\Application\cn2kr-frontend\content\articles\`（30 篇 md） |
-| 配图目录 | `D:\Application\cn2kr-frontend\public\images\`（30 张 jpg/png 真实照片 + 旧 svg） |
+| pipeline 脚本 | `D:\Git\cn2kr\pipeline\pipeline.py` |
+| pipeline 配置 | `D:\Git\cn2kr\pipeline\config.json`（含 DeepSeek key） |
+| 配图脚本 | `D:\Git\cn2kr\pipeline\fetch_images.py`（Wikimedia Commons 真实照片） |
+| 前端项目 | `D:\Git\cn2kr\frontend\` |
+| 内容目录 | `D:\Git\cn2kr\frontend\content\articles\`（30 篇 md） |
+| 配图目录 | `D:\Git\cn2kr\frontend\public\images\`（30 张 jpg/png 真实照片 + 旧 svg） |
 | 前端设计 | `app\assets\css\main.css` + `app\pages\` + `app\components\` |
-| 数据库 schema | `D:\Application\cn2kr\supabase\schema.sql`（likes/comments 表 + RLS） |
-| 部署文档 | `D:\Application\cn2kr\SETUP_DEPLOY.md`（Supabase + Cloudflare Pages） |
+| 数据库 schema | `D:\Git\cn2kr\supabase\schema.sql`（likes/comments 表 + RLS） |
+| 部署文档 | `D:\Git\cn2kr\SETUP_DEPLOY.md`（Supabase + Cloudflare Pages） |
 | 环境变量模板 | `cn2kr-frontend\.env.example`（SUPABASE_URL + ANON_KEY） |
 
 ## 当前进度
@@ -68,10 +68,10 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 
 ```bash
 # 前端 dev server（当前已在后台运行）
-cd D:\Application\cn2kr-frontend && npm run dev   # → localhost:3000
+cd D:\Git\cn2kr\frontend && npm run dev   # → localhost:3000
 
 # 生成更多内容
-cd D:\Application\cn2kr && python pipeline.py --category tech --count 10
+cd D:\Git\cn2kr\pipeline && python pipeline.py --category tech --count 10
 # 分类：tech / travel / direct
 
 # 查看 Hermes 频道配置
