@@ -57,7 +57,7 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 15. ✅ **首页版面优化**：卡片去边框改柔和阴影 + 栏目标题 + 圆角加大
 16. ✅ **UAT/PRD 双环境**：`cn2kr.net`(main) + `uat.cn2kr.net`(uat)，两个独立 Pages 项目
 17. ✅ **每日自动更新**：Windows 计划任务 `cn2kr-daily`，每天 8 点跑 auto_update.bat（抓热点→生成→配图→git push→自动上线）
-18. 🔄 **待办**：Google 登录（表已预留 user_id）、评论审核后台、上广告、站内搜索
+18. 🔄 **待办**：Google 登录（表已预留 user_id）、评论审核后台、上广告、站内搜索、分页（文章攒到 ~100 篇时做，静态站需构建时预渲染 /page/N）
 
 ## UI 方向（用户明确要的）
 
