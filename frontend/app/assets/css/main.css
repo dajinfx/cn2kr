@@ -28,6 +28,17 @@ img { max-width: 100%; display: block; }
 
 .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
 
+/* ============ UAT 测试横幅 ============ */
+.uat-banner {
+  background: #f97316;
+  color: #fff;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
 /* ============ 顶部导航 ============ */
 .header {
   position: sticky;

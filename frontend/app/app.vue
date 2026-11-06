@@ -2,6 +2,9 @@
   <div>
     <NuxtRouteAnnouncer />
 
+    <!-- UAT 测试环境横幅 -->
+    <div class="uat-banner">⚠️ UAT 테스트 환경 — 실제 운영 사이트(cn2kr.net)가 아닙니다</div>
+
     <!-- 顶部导航 -->
     <header class="header">
       <div class="container header-inner">

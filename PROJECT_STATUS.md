@@ -30,12 +30,13 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 | pipeline 配置 | `D:\Git\cn2kr\pipeline\config.json`（含 DeepSeek key） |
 | 配图脚本 | `D:\Git\cn2kr\pipeline\fetch_images.py`（Wikimedia Commons 真实照片） |
 | 前端项目 | `D:\Git\cn2kr\frontend\` |
-| 内容目录 | `D:\Git\cn2kr\frontend\content\articles\`（30 篇 md） |
-| 配图目录 | `D:\Git\cn2kr\frontend\public\images\`（30 张 jpg/png 真实照片 + 旧 svg） |
+| 内容目录 | `D:\Git\cn2kr\frontend\content\articles\`（34 篇 md） |
+| 配图目录 | `D:\Git\cn2kr\frontend\public\images\`（jpg/png 真实照片 + 旧 svg） |
 | 前端设计 | `app\assets\css\main.css` + `app\pages\` + `app\components\` |
 | 数据库 schema | `D:\Git\cn2kr\supabase\schema.sql`（likes/comments 表 + RLS） |
 | 部署文档 | `D:\Git\cn2kr\SETUP_DEPLOY.md`（Supabase + Cloudflare Pages） |
-| 环境变量模板 | `cn2kr-frontend\.env.example`（SUPABASE_URL + ANON_KEY） |
+| 环境变量模板 | `D:\Git\cn2kr\frontend\.env.example`（SUPABASE_URL + ANON_KEY） |
+| 自动化脚本 | `D:\Git\cn2kr\auto_update.bat`（每天 8 点，Windows 计划任务 `cn2kr-daily`） |
 
 ## 当前进度
 
@@ -47,8 +48,16 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 6. ✅ 首页加了「头条焦点区」Hero（大图 + 渐变压暗 + 分类色块 + 大标题 + 导语，跟随分类页签切换，与网格去重）
 7. ✅ 点赞功能 + 访客评论（先做了 SQLite + Nitro 版，后因托管需求迁移）
 8. ✅ 点赞/评论加固：匿名 client_id 幂等去重、IP 滑动窗口限流、honeypot 蜜罐、`approved` 审核字段
-9. ✅ **迁移到 Supabase + 静态托管**：删掉 `server/`（SQLite/Nitro），点赞/评论改走 Supabase 客户端直连；`nuxt generate` 静态生成（71 路由，`.output/public`）；写好 `schema.sql` + `SETUP_DEPLOY.md` + `.env.example`
-10. 🔄 **待办**：用户在 Supabase 建项目跑 schema + Cloudflare Pages 绑定 `cn2kr.net`；之后加 Google 登录（表已预留 user_id）、评论审核后台、排版精修
+9. ✅ **迁移到 Supabase + 静态托管**：删掉 `server/`（SQLite/Nitro），点赞/评论改走 Supabase 客户端直连；`nuxt generate` 静态生成；写好 `schema.sql` + `SETUP_DEPLOY.md` + `.env.example`
+10. ✅ **正式上线**：Cloudflare Pages 部署 + 域名 `cn2kr.net` + DNS + SSL；Supabase 建项目跑 schema（likes/comments 表 + RLS，publishable key 可用）
+11. ✅ **去 AI 味儿提示词**：第一人称(저는/제가) + 具体细节 + 禁套话（총정리/안녕하세요/오늘은 等）+ 温度 0.7
+12. ✅ **敬语规则**：允许 합니다체(-ㅂ니다) 和 해요체(-요)，只禁 반말（只对新文章生效，旧文章保持原样）
+13. ✅ **字体优化**：Pretendard（jsdelivr CDN）+ 字间距微调
+14. ✅ **SEO/AEO**：@nuxtjs/sitemap 自动 sitemap.xml + robots.txt + 每页 meta 标签 + Article/WebSite JSON-LD + lang=ko
+15. ✅ **首页版面优化**：卡片去边框改柔和阴影 + 栏目标题 + 圆角加大
+16. ✅ **UAT/PRD 双环境**：`cn2kr.net`(main) + `uat.cn2kr.net`(uat)，两个独立 Pages 项目
+17. ✅ **每日自动更新**：Windows 计划任务 `cn2kr-daily`，每天 8 点跑 auto_update.bat（抓热点→生成→配图→git push→自动上线）
+18. 🔄 **待办**：Google 登录（表已预留 user_id）、评论审核后台、上广告、站内搜索
 
 ## UI 方向（用户明确要的）
 
