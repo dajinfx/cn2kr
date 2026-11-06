@@ -11,6 +11,7 @@
   python pipeline.py --dry-run                       # 只生成，不写文件
 """
 import json
+import os
 import re
 import sys
 import time
@@ -20,15 +21,46 @@ import argparse
 import urllib.request
 from pathlib import Path
 
+# 强制 UTF-8 输出（Windows 计划任务 cp949 环境会崩溃）
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
+# repo 根目录（pipeline 的上一级）
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT_OUTPUT_DIR = os.path.join(REPO_ROOT, "frontend", "content", "articles")
+DEFAULT_IMAGE_DIR = os.path.join(REPO_ROOT, "frontend", "public", "images")
+
 
 # ---------------------------------------------------------------- 配置
 def load_config():
+    cfg = {}
     try:
-        with open("config.json", encoding="utf-8") as f:
-            return json.load(f)
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json"), encoding="utf-8") as f:
+            cfg = json.load(f)
     except FileNotFoundError:
-        print("❌ 找不到 config.json")
+        pass
+
+    # 环境变量优先（GitHub Actions 用 secret 注入）
+    if os.environ.get("DEEPSEEK_API_KEY"):
+        cfg["deepseek_api_key"] = os.environ["DEEPSEEK_API_KEY"]
+    if os.environ.get("DEEPSEEK_BASE_URL"):
+        cfg["deepseek_base_url"] = os.environ["DEEPSEEK_BASE_URL"]
+    if os.environ.get("DEEPSEEK_MODEL"):
+        cfg["model"] = os.environ["DEEPSEEK_MODEL"]
+
+    cfg.setdefault("deepseek_base_url", "https://api.deepseek.com/v1")
+    cfg.setdefault("model", "deepseek-chat")
+    cfg.setdefault("output_dir", DEFAULT_OUTPUT_DIR)
+    cfg.setdefault("image_dir", DEFAULT_IMAGE_DIR)
+    cfg.setdefault("sources", {"baidu_hot": True, "toutiao_hot": True, "smzdm_rss": True})
+
+    if not cfg.get("deepseek_api_key"):
+        print("❌ 找不到 DeepSeek API key（需要 config.json 或 DEEPSEEK_API_KEY 环境变量）")
         sys.exit(1)
+    return cfg
 
 
 CFG = None

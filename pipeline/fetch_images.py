@@ -19,9 +19,18 @@ import time
 import urllib.parse
 import urllib.request
 
-CONTENT_DIR = "D:/Git/cn2kr/frontend/content/articles"
-IMAGE_DIR = "D:/Git/cn2kr/frontend/public/images"
-CONFIG_PATH = "D:/Git/cn2kr/pipeline/config.json"
+# 强制 UTF-8 输出（Windows 计划任务 cp949 环境会崩溃）
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
+# repo 根目录（pipeline 的上一级），路径相对化以便本地/云端都能跑
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONTENT_DIR = os.path.join(REPO_ROOT, "frontend", "content", "articles")
+IMAGE_DIR = os.path.join(REPO_ROOT, "frontend", "public", "images")
+CONFIG_PATH = os.path.join(REPO_ROOT, "pipeline", "config.json")
 UA = {"User-Agent": "cn2kr-image-fetcher/1.0 (personal project)"}
 
 GOOD_MIME = {"image/jpeg", "image/png"}
@@ -35,8 +44,27 @@ CATEGORY_FALLBACK = {
 
 
 def load_config():
-    with open(CONFIG_PATH, encoding="utf-8") as f:
-        return json.load(f)
+    cfg = {}
+    try:
+        with open(CONFIG_PATH, encoding="utf-8") as f:
+            cfg = json.load(f)
+    except FileNotFoundError:
+        pass
+
+    # 环境变量优先（GitHub Actions 用 secret 注入）
+    if os.environ.get("DEEPSEEK_API_KEY"):
+        cfg["deepseek_api_key"] = os.environ["DEEPSEEK_API_KEY"]
+    if os.environ.get("DEEPSEEK_BASE_URL"):
+        cfg["deepseek_base_url"] = os.environ["DEEPSEEK_BASE_URL"]
+    if os.environ.get("DEEPSEEK_MODEL"):
+        cfg["model"] = os.environ["DEEPSEEK_MODEL"]
+
+    cfg.setdefault("deepseek_base_url", "https://api.deepseek.com/v1")
+    cfg.setdefault("model", "deepseek-chat")
+    if not cfg.get("deepseek_api_key"):
+        print("❌ 找不到 DeepSeek API key（需要 config.json 或 DEEPSEEK_API_KEY 环境变量）")
+        sys.exit(1)
+    return cfg
 
 
 def call_deepseek(prompt):
