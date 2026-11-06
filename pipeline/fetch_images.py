@@ -26,11 +26,11 @@ UA = {"User-Agent": "cn2kr-image-fetcher/1.0 (personal project)"}
 
 GOOD_MIME = {"image/jpeg", "image/png"}
 
-# DeepSeek 失败时的分类兜底检索词
+# 分类兜底检索词（多个，逐个尝试；都用「保证是中国」的词）
 CATEGORY_FALLBACK = {
-    "중국 테크": "China technology",
-    "중국 여행": "China travel landmark",
-    "중국 직구": "online shopping parcel",
+    "중국 테크": ["China technology", "Shanghai"],
+    "중국 여행": ["Great Wall of China", "Forbidden City"],
+    "중국 직구": ["Shanghai", "China"],
 }
 
 
@@ -129,6 +129,27 @@ def pick_candidate(query):
     return None
 
 
+def pick_with_fallback(query, cat, indent="   "):
+    """多层兜底：主词 → 分类词（多个）→ 通用 China，尽量找到图"""
+    cand = pick_candidate(query)
+    if cand:
+        return cand
+    for fb in CATEGORY_FALLBACK.get(cat, []):
+        if fb.lower() != query.lower():
+            print(f"{indent}-> 无结果，兜底词: {fb}")
+            time.sleep(1.2)
+            cand = pick_candidate(fb)
+            if cand:
+                return cand
+    if query.lower() != "china":
+        print(f"{indent}-> 最终兜底: China")
+        time.sleep(1.2)
+        cand = pick_candidate("China")
+        if cand:
+            return cand
+    return None
+
+
 def download(url, dest):
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=60) as r:
@@ -152,13 +173,7 @@ def process_inline_images(slug, body, cat, dry):
             continue
         print(f"    [插图 {i + 1}] query: {query}")
         time.sleep(1.2)
-        cand = pick_candidate(query)
-        if not cand:
-            fb = CATEGORY_FALLBACK.get(cat)
-            if fb and fb != query:
-                print(f"    -> 精确词无结果，兜底: {fb}")
-                time.sleep(1.2)
-                cand = pick_candidate(fb)
+        cand = pick_with_fallback(query, cat, indent="    ")
         if not cand:
             print("    -> 插图无匹配，跳过")
             continue
@@ -217,13 +232,7 @@ def main():
         query = derive_query(title, cat)
         print(f"{name}\n  标题: {title[:40]}\n  query: {query}")
         time.sleep(1.2)  # Wikimedia 限速
-        cand = pick_candidate(query)
-        if not cand:
-            fb = CATEGORY_FALLBACK.get(cat)
-            if fb and fb != query:
-                print(f"   -> 精确词无结果，用分类兜底词重试: {fb}")
-                time.sleep(1.2)
-                cand = pick_candidate(fb)
+        cand = pick_with_fallback(query, cat)
         if not cand:
             print("   -> 无匹配结果，保留 SVG ❌")
             fail += 1
