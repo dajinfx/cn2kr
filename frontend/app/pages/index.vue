@@ -40,6 +40,12 @@
 
     <!-- 杂志式混排（头条之后的其余文章） -->
     <div class="container">
+      <div class="section-head">
+        <div class="left">
+          <h2>{{ activeTab === 'all' ? '최신 업데이트' : activeTab }}</h2>
+        </div>
+        <span class="hint">{{ gridPosts.length }}개 글</span>
+      </div>
       <PostGrid :posts="gridPosts" />
     </div>
   </div>

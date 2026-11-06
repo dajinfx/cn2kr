@@ -7,9 +7,9 @@
   --line: #e2e8f0;
   --bg: #ffffff;
   --soft: #f8fafc;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06);
-  --shadow-md: 0 10px 30px rgba(15, 23, 42, .10);
-  --radius: 14px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, .06);
+  --shadow-md: 0 12px 32px rgba(15, 23, 42, .12);
+  --radius: 16px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -194,6 +194,36 @@ img { max-width: 100%; display: block; }
   color: var(--muted);
 }
 
+/* ============ 栏目标题 ============ */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0 18px;
+}
+.section-head .left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-head .left::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(180deg, #2563eb, #0ea5e9);
+  border-radius: 2px;
+}
+.section-head h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.section-head .hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
 /* ============ 杂志式混排网格 ============ */
 .magazine {
   display: grid;
@@ -213,17 +243,17 @@ img { max-width: 100%; display: block; }
 /* ============ 卡片基础 ============ */
 .card {
   background: #fff;
-  border: 1px solid var(--line);
+  border: none;
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform .18s ease, box-shadow .18s ease;
+  transition: transform .22s ease, box-shadow .22s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
 }
-.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 
 .card-thumb {
   flex: 1;
