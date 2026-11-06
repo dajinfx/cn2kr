@@ -138,6 +138,50 @@ def download(url, dest):
     return len(data)
 
 
+def process_inline_images(slug, body, cat, dry):
+    """把正文里的 [이미지: 검색어] 标记替换成真实照片，返回 (新正文, 成功数)"""
+    pattern = re.compile(r"\[이미지:\s*[^\]]+\]")
+    markers = re.findall(r"\[이미지:\s*([^\]]+)\]", body)
+    if not markers:
+        return body, 0
+    new_body = body
+    ok = 0
+    for i, query in enumerate(markers):
+        query = query.strip()
+        if not query:
+            continue
+        print(f"    [插图 {i + 1}] query: {query}")
+        time.sleep(1.2)
+        cand = pick_candidate(query)
+        if not cand:
+            fb = CATEGORY_FALLBACK.get(cat)
+            if fb and fb != query:
+                print(f"    -> 精确词无结果，兜底: {fb}")
+                time.sleep(1.2)
+                cand = pick_candidate(fb)
+        if not cand:
+            print("    -> 插图无匹配，跳过")
+            continue
+        thumb, wm_title, mime, w = cand
+        print(f"    -> {wm_title} ({mime}, {w}px)")
+        if dry:
+            ok += 1
+            continue
+        ext = ".jpg" if mime == "image/jpeg" else ".png"
+        dest_name = f"{slug}-{i + 1}{ext}"
+        dest = os.path.join(IMAGE_DIR, dest_name)
+        try:
+            nbytes = download(thumb, dest)
+            new_body = pattern.sub(
+                f"![{query}](/images/{dest_name})", new_body, count=1
+            )
+            print(f"    ✅ 插图已下载 {nbytes // 1024}KB -> /images/{dest_name}")
+            ok += 1
+        except Exception as e:
+            print(f"    [插图下载失败] {e}")
+    return new_body, ok
+
+
 def main():
     dry = "--dry-run" in sys.argv
     mode = "DRY-RUN (预览)" if dry else "DOWNLOAD (下载)"
@@ -200,9 +244,13 @@ def main():
             txt2, cnt = re.subn(
                 r'image:\s*"/images/[^"]+"', f'image: "{new_img}"', txt
             )
+            # 处理正文插图（[이미지: ...] 标记 → 真实照片）
+            txt3, inline_ok = process_inline_images(name, txt2, cat, dry)
             with open(md_path, "w", encoding="utf-8") as fh:
-                fh.write(txt2)
-            print(f"   ✅ 已下载 {nbytes // 1024}KB -> {new_img}")
+                fh.write(txt3)
+            print(f"   ✅ 封面已下载 {nbytes // 1024}KB -> {new_img}")
+            if inline_ok:
+                print(f"   ✅ 正文插图 {inline_ok} 张")
             ok += 1
         except Exception as e:
             print(f"   [DOWNLOAD ERROR] {e}")
