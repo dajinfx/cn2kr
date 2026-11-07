@@ -42,14 +42,14 @@ CATEGORY_FALLBACK = {
     "중국 직구": ["Shanghai", "China"],
 }
 
-# 韩国语城市名 → 英文检索词（从标题提取城市，作为兜底）
+# 韩国语城市名 → 英文检索词（从标题提取城市，作为兜底；用「标志性景点」而非城市名，避免配到地铁图/铁路等无关图）
 CITY_MAP = {
-    "청두": "Chengdu", "충칭": "Chongqing", "베이징": "Beijing", "상하이": "Shanghai",
-    "시안": "Xi'an", "항저우": "Hangzhou", "쑤저우": "Suzhou", "리장": "Lijiang",
-    "다리": "Dali", "하이난": "Hainan", "장가계": "Zhangjiajie", "구이린": "Guilin",
-    "쿤밍": "Kunming", "윈난": "Yunnan", "광저우": "Guangzhou", "선전": "Shenzhen",
-    "톈진": "Tianjin", "난징": "Nanjing", "우한": "Wuhan", "샤먼": "Xiamen",
-    "칭다오": "Qingdao", "다롄": "Dalian", "하얼빈": "Harbin", "창사": "Changsha",
+    "청두": "Chengdu panda", "충칭": "Chongqing skyline", "베이징": "Forbidden City", "상하이": "Shanghai skyline",
+    "시안": "Terracotta Army", "항저우": "Hangzhou West Lake", "쑤저우": "Suzhou garden", "리장": "Lijiang old town",
+    "다리": "Dali Yunnan", "하이난": "Hainan beach", "장가계": "Zhangjiajie", "구이린": "Guilin karst",
+    "쿤밍": "Kunming", "윈난": "Yunnan", "광저우": "Guangzhou skyline", "선전": "Shenzhen skyline",
+    "톈진": "Tianjin", "난징": "Nanjing", "우한": "Wuhan", "샤먼": "Xiamen Gulangyu",
+    "칭다오": "Qingdao", "다롄": "Dalian", "하얼빈": "Harbin ice festival", "창사": "Changsha",
     "정저우": "Zhengzhou", "둥관": "Dongguan",
 }
 
@@ -190,24 +190,24 @@ def simplify_query(query):
 
 
 def pick_with_fallback(query, cat, indent="   ", skip_titles=None, title=None):
-    """多层兜底：完整词 → 简化词 → 城市名 → 分类词 → 通用 China，尽量找到且不重复"""
+    """多层兜底：完整词 → 城市标志景点 → 简化词 → 分类词 → 通用 China，尽量找到且不重复"""
     skip = skip_titles or set()
     cand = pick_candidate(query, skip)
     if cand:
         return cand
+    # 优先用标题里的城市标志性景点（比简化泛词更精准，避免配到地铁图/铁路等无关图）
+    city = extract_city(title or "")
+    if city and city.lower() != query.lower():
+        print(f"{indent}-> 城市标志景点: {city}")
+        time.sleep(1.2)
+        cand = pick_candidate(city, skip)
+        if cand:
+            return cand
     # 逐步简化查询词（去掉末尾的多余词，如 alley/cable car）
     for short in simplify_query(query):
         print(f"{indent}-> 简化查询: {short}")
         time.sleep(1.2)
         cand = pick_candidate(short, skip)
-        if cand:
-            return cand
-    # 从标题提取城市名兜底（城市类文章配对应城市的图）
-    city = extract_city(title or "")
-    if city and city.lower() != query.lower():
-        print(f"{indent}-> 城市兜底: {city}")
-        time.sleep(1.2)
-        cand = pick_candidate(city, skip)
         if cand:
             return cand
     # 分类兜底
