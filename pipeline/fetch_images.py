@@ -131,8 +131,9 @@ def wm_search(query, limit=6, retries=4):
     return {}
 
 
-def pick_candidate(query):
-    """返回 (thumb_url, title, mime, width) 或 None"""
+def pick_candidate(query, skip_titles=None):
+    """返回 (thumb_url, title, mime, width) 或 None；跳过 skip_titles 里已用过的图"""
+    skip = skip_titles or set()
     try:
         data = wm_search(query)
     except Exception as e:
@@ -143,36 +144,58 @@ def pick_candidate(query):
         return None
     items = sorted(pages.values(), key=lambda p: p.get("index", 99))
     for p in items:
+        title = p.get("title", "")
+        if title in skip:
+            continue
         ii = (p.get("imageinfo") or [{}])[0]
         mime = ii.get("mime", "")
         w = ii.get("width", 0)
         if mime in GOOD_MIME and w >= 800:
             thumb = ii.get("thumburl") or ii.get("url")
-            return thumb, p.get("title", ""), mime, w
+            return thumb, title, mime, w
     for p in items:
+        title = p.get("title", "")
+        if title in skip:
+            continue
         ii = (p.get("imageinfo") or [{}])[0]
         if ii.get("mime", "") in GOOD_MIME:
             thumb = ii.get("thumburl") or ii.get("url")
-            return thumb, p.get("title", ""), ii.get("mime", ""), ii.get("width", 0)
+            return thumb, title, ii.get("mime", ""), ii.get("width", 0)
     return None
 
 
-def pick_with_fallback(query, cat, indent="   "):
-    """多层兜底：主词 → 分类词（多个）→ 通用 China，尽量找到图"""
-    cand = pick_candidate(query)
+def simplify_query(query):
+    """把查询词逐步缩短（去掉末尾词），返回简化版本列表"""
+    words = query.split()
+    return [" ".join(words[:i]) for i in range(len(words) - 1, 1, -1)]
+
+
+def pick_with_fallback(query, cat, indent="   ", skip_titles=None):
+    """多层兜底：完整词 → 简化词 → 分类词 → 通用 China，尽量找到且不重复"""
+    skip = skip_titles or set()
+    cand = pick_candidate(query, skip)
     if cand:
         return cand
+    # 逐步简化查询词（去掉末尾的多余词，如 alley/cable car）
+    for short in simplify_query(query):
+        print(f"{indent}-> 简化查询: {short}")
+        time.sleep(1.2)
+        cand = pick_candidate(short, skip)
+        if cand:
+            return cand
+    # 分类兜底
     for fb in CATEGORY_FALLBACK.get(cat, []):
         if fb.lower() != query.lower():
-            print(f"{indent}-> 无结果，兜底词: {fb}")
+            print(f"{indent}-> 兜底词: {fb}")
             time.sleep(1.2)
-            cand = pick_candidate(fb)
+            cand = pick_candidate(fb, skip)
             if cand:
                 return cand
+    # 最终 China
     if query.lower() != "china":
         print(f"{indent}-> 最终兜底: China")
         time.sleep(1.2)
-        cand = pick_candidate("China")
+        cand = pick_candidate("China", skip)
         if cand:
             return cand
     return None
@@ -187,8 +210,9 @@ def download(url, dest):
     return len(data)
 
 
-def process_inline_images(slug, body, cat, dry):
+def process_inline_images(slug, body, cat, dry, used_titles=None):
     """把正文里的 [이미지: 검색어] 标记替换成真实照片，返回 (新正文, 成功数)"""
+    used = used_titles if used_titles is not None else set()
     pattern = re.compile(r"\[이미지:\s*[^\]]+\]")
     markers = re.findall(r"\[이미지:\s*([^\]]+)\]", body)
     if not markers:
@@ -201,11 +225,12 @@ def process_inline_images(slug, body, cat, dry):
             continue
         print(f"    [插图 {i + 1}] query: {query}")
         time.sleep(1.2)
-        cand = pick_with_fallback(query, cat, indent="    ")
+        cand = pick_with_fallback(query, cat, indent="    ", skip_titles=used)
         if not cand:
             print("    -> 插图无匹配，跳过")
             continue
         thumb, wm_title, mime, w = cand
+        used.add(wm_title)
         print(f"    -> {wm_title} ({mime}, {w}px)")
         if dry:
             ok += 1
@@ -258,14 +283,16 @@ def main():
     ok = fail = 0
     for name, title, cat in todo:
         query = derive_query(title, cat)
+        used = set()  # 已用图片标题（封面和插图去重）
         print(f"{name}\n  标题: {title[:40]}\n  query: {query}")
         time.sleep(1.2)  # Wikimedia 限速
-        cand = pick_with_fallback(query, cat)
+        cand = pick_with_fallback(query, cat, skip_titles=used)
         if not cand:
             print("   -> 无匹配结果，保留 SVG ❌")
             fail += 1
             continue
         thumb, wm_title, mime, w = cand
+        used.add(wm_title)
         print(f"   -> {wm_title} ({mime}, {w}px)")
         if dry:
             ok += 1
@@ -281,8 +308,8 @@ def main():
             txt2, cnt = re.subn(
                 r'image:\s*"/images/[^"]+"', f'image: "{new_img}"', txt
             )
-            # 处理正文插图（[이미지: ...] 标记 → 真实照片）
-            txt3, inline_ok = process_inline_images(name, txt2, cat, dry)
+            # 处理正文插图（[이미지: ...] 标记 → 真实照片），复用 used 去重
+            txt3, inline_ok = process_inline_images(name, txt2, cat, dry, used)
             with open(md_path, "w", encoding="utf-8") as fh:
                 fh.write(txt3)
             print(f"   ✅ 封面已下载 {nbytes // 1024}KB -> {new_img}")
