@@ -42,6 +42,25 @@ CATEGORY_FALLBACK = {
     "중국 직구": ["Shanghai", "China"],
 }
 
+# 韩国语城市名 → 英文检索词（从标题提取城市，作为兜底）
+CITY_MAP = {
+    "청두": "Chengdu", "충칭": "Chongqing", "베이징": "Beijing", "상하이": "Shanghai",
+    "시안": "Xi'an", "항저우": "Hangzhou", "쑤저우": "Suzhou", "리장": "Lijiang",
+    "다리": "Dali", "하이난": "Hainan", "장가계": "Zhangjiajie", "구이린": "Guilin",
+    "쿤밍": "Kunming", "윈난": "Yunnan", "광저우": "Guangzhou", "선전": "Shenzhen",
+    "톈진": "Tianjin", "난징": "Nanjing", "우한": "Wuhan", "샤먼": "Xiamen",
+    "칭다오": "Qingdao", "다롄": "Dalian", "하얼빈": "Harbin", "창사": "Changsha",
+    "정저우": "Zhengzhou", "둥관": "Dongguan",
+}
+
+
+def extract_city(title):
+    """从韩文标题里提取城市名，返回英文检索词（找不到返回 None）"""
+    for ko, en in CITY_MAP.items():
+        if ko in title:
+            return en
+    return None
+
 
 def load_config():
     cfg = {}
@@ -170,8 +189,8 @@ def simplify_query(query):
     return [" ".join(words[:i]) for i in range(len(words) - 1, 1, -1)]
 
 
-def pick_with_fallback(query, cat, indent="   ", skip_titles=None):
-    """多层兜底：完整词 → 简化词 → 分类词 → 通用 China，尽量找到且不重复"""
+def pick_with_fallback(query, cat, indent="   ", skip_titles=None, title=None):
+    """多层兜底：完整词 → 简化词 → 城市名 → 分类词 → 通用 China，尽量找到且不重复"""
     skip = skip_titles or set()
     cand = pick_candidate(query, skip)
     if cand:
@@ -181,6 +200,14 @@ def pick_with_fallback(query, cat, indent="   ", skip_titles=None):
         print(f"{indent}-> 简化查询: {short}")
         time.sleep(1.2)
         cand = pick_candidate(short, skip)
+        if cand:
+            return cand
+    # 从标题提取城市名兜底（城市类文章配对应城市的图）
+    city = extract_city(title or "")
+    if city and city.lower() != query.lower():
+        print(f"{indent}-> 城市兜底: {city}")
+        time.sleep(1.2)
+        cand = pick_candidate(city, skip)
         if cand:
             return cand
     # 分类兜底
@@ -210,7 +237,7 @@ def download(url, dest):
     return len(data)
 
 
-def process_inline_images(slug, body, cat, dry, used_titles=None):
+def process_inline_images(slug, body, cat, dry, used_titles=None, title=None):
     """把正文里的 [이미지: 검색어] 标记替换成真实照片，返回 (新正文, 成功数)"""
     used = used_titles if used_titles is not None else set()
     pattern = re.compile(r"\[이미지:\s*[^\]]+\]")
@@ -225,7 +252,7 @@ def process_inline_images(slug, body, cat, dry, used_titles=None):
             continue
         print(f"    [插图 {i + 1}] query: {query}")
         time.sleep(1.2)
-        cand = pick_with_fallback(query, cat, indent="    ", skip_titles=used)
+        cand = pick_with_fallback(query, cat, indent="    ", skip_titles=used, title=title)
         if not cand:
             print("    -> 插图无匹配，跳过")
             continue
@@ -286,7 +313,7 @@ def main():
         used = set()  # 已用图片标题（封面和插图去重）
         print(f"{name}\n  标题: {title[:40]}\n  query: {query}")
         time.sleep(1.2)  # Wikimedia 限速
-        cand = pick_with_fallback(query, cat, skip_titles=used)
+        cand = pick_with_fallback(query, cat, skip_titles=used, title=title)
         if not cand:
             print("   -> 无匹配结果，保留 SVG ❌")
             fail += 1
@@ -309,7 +336,7 @@ def main():
                 r'image:\s*"/images/[^"]+"', f'image: "{new_img}"', txt
             )
             # 处理正文插图（[이미지: ...] 标记 → 真实照片），复用 used 去重
-            txt3, inline_ok = process_inline_images(name, txt2, cat, dry, used)
+            txt3, inline_ok = process_inline_images(name, txt2, cat, dry, used, title)
             with open(md_path, "w", encoding="utf-8") as fh:
                 fh.write(txt3)
             print(f"   ✅ 封面已下载 {nbytes // 1024}KB -> {new_img}")
