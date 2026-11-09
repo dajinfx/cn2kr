@@ -462,6 +462,70 @@ img { max-width: 100%; display: block; }
 .comment-content { font-size: 14.5px; color: var(--body); line-height: 1.65; white-space: pre-wrap; }
 .comment-empty { color: var(--muted); font-size: 14px; text-align: center; padding: 20px 0; }
 
+/* ============ About 页 ============ */
+.about-hero {
+  padding: 48px 0 24px;
+  text-align: center;
+}
+.about-hero h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.about-sub {
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.about-body {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-bottom: 56px;
+}
+.about-section {
+  margin-bottom: 32px;
+}
+.about-section h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.about-section p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--body);
+  margin-bottom: 12px;
+}
+.about-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.about-list li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--body);
+  padding-left: 18px;
+  position: relative;
+}
+.about-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.about-contact {
+  font-weight: 700;
+  color: var(--ink);
+}
+
 /* ============ 页脚 ============ */
 .footer { background: var(--ink); color: #94a3b8; padding: 56px 0 32px; margin-top: 56px; }
 .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }

@@ -2,7 +2,6 @@
   <div>
     <NuxtRouteAnnouncer />
 
-    <!-- UAT 测试环境横幅 -->
     <!-- UAT 测试环境横幅（仅 UAT 域名显示） -->
     <div v-if="isUat" class="uat-banner">⚠️ UAT 테스트 환경 — 실제 운영 사이트(cn2kr.net)가 아닙니다</div>
 
@@ -15,6 +14,7 @@
           <NuxtLink v-for="cat in cats" :key="cat.slug" :to="`/category/${cat.slug}`">
             {{ cat.name }}
           </NuxtLink>
+          <NuxtLink to="/about">소개</NuxtLink>
         </nav>
       </div>
     </header>
@@ -37,6 +37,10 @@
             <NuxtLink v-for="cat in cats" :key="cat.slug" :to="`/category/${cat.slug}`">
               {{ cat.name }}
             </NuxtLink>
+          </div>
+          <div class="col">
+            <h4>사이트</h4>
+            <NuxtLink to="/about">소개</NuxtLink>
           </div>
         </div>
         <div class="footer-bottom">© {{ new Date().getFullYear() }} cn2kr — All rights reserved</div>
