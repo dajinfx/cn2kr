@@ -45,7 +45,12 @@
           <h2>{{ activeTab === 'all' ? '최신 업데이트' : activeTab }}</h2>
         </div>
       </div>
-      <PostGrid :posts="gridPosts" />
+      <PostGrid :posts="visibleGridPosts" />
+      <div v-if="visibleGridPosts.length < gridPosts.length" class="load-more-wrap">
+        <button class="load-more" type="button" @click="loadMore">
+          더 보기 <span class="load-more-count">({{ gridPosts.length - visibleGridPosts.length }}개 남음)</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -77,6 +82,19 @@ const filteredPosts = computed(() => {
 const featured = computed(() => filteredPosts.value[0] || null)
 const gridPosts = computed(() => filteredPosts.value.slice(1))
 const featuredColor = computed(() => categoryColor(featured.value?.meta?.category))
+
+// 加载更多：初始显示 12 篇，点「더 보기」逐步显示
+const visibleCount = ref(12)
+const visibleGridPosts = computed(() => gridPosts.value.slice(0, visibleCount.value))
+
+function loadMore() {
+  visibleCount.value += 12
+}
+
+// 切换分类时重置
+watch(activeTab, () => {
+  visibleCount.value = 12
+})
 
 // 首页 SEO
 useSeoMeta({

@@ -617,6 +617,26 @@ img { max-width: 100%; display: block; }
   .search-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ============ 加载更多 ============ */
+.load-more-wrap {
+  text-align: center;
+  padding: 24px 0 8px;
+}
+.load-more {
+  padding: 12px 28px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  font-family: inherit;
+}
+.load-more:hover { border-color: var(--accent); color: var(--accent); }
+.load-more-count { color: var(--muted); font-weight: 400; }
+
 /* ============ 页脚 ============ */
 .footer { background: var(--ink); color: #94a3b8; padding: 56px 0 32px; margin-top: 56px; }
 .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }
