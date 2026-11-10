@@ -246,11 +246,14 @@ def process_inline_images(slug, body, cat, dry, used_titles=None, title=None):
         return body, 0
     new_body = body
     ok = 0
-    for i, query in enumerate(markers):
-        query = query.strip()
+    for i, marker in enumerate(markers):
+        # 标记格式: "English query | Korean alt"（兼容只有 English 的旧格式）
+        parts = [p.strip() for p in marker.split("|")]
+        query = parts[0]
+        alt = parts[1] if len(parts) > 1 and parts[1] else (title or "이미지")
         if not query:
             continue
-        print(f"    [插图 {i + 1}] query: {query}")
+        print(f"    [插图 {i + 1}] query: {query} / alt: {alt}")
         time.sleep(1.2)
         cand = pick_with_fallback(query, cat, indent="    ", skip_titles=used, title=title)
         if not cand:
@@ -268,7 +271,7 @@ def process_inline_images(slug, body, cat, dry, used_titles=None, title=None):
         try:
             nbytes = download(thumb, dest)
             new_body = pattern.sub(
-                f"![{query}](/images/{dest_name})", new_body, count=1
+                f"![{alt}](/images/{dest_name})", new_body, count=1
             )
             print(f"    ✅ 插图已下载 {nbytes // 1024}KB -> /images/{dest_name}")
             ok += 1
