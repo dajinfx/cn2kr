@@ -103,6 +103,22 @@ CATEGORY_ANGLES = {
     ],
 }
 
+# 高频搜索关键词（韩国人实际会搜的词，让标题/正文自然命中）
+KEYWORDS = {
+    "중국 테크": [
+        "중국 스마트폰 직구", "화웨이", "샤오미", "중국 전기차",
+        "중국 AI", "딥시크", "중국 반도체", "중국 로봇청소기",
+    ],
+    "중국 여행": [
+        "중국 여행", "상하이 여행", "베이징 여행", "장가계 여행",
+        "중국 여행 준비", "중국 여행 비자", "중국 고속철", "알리페이 등록",
+    ],
+    "중국 직구": [
+        "중국 직구", "타오바오 직구", "알리익스프레스", "테무",
+        "1688 직구", "배송대행", "직구 관세", "직구 가품",
+    ],
+}
+
 
 def _get(url, timeout=15):
     req = urllib.request.Request(url, headers={
@@ -201,6 +217,7 @@ PROMPT = """당신은 중국 테크·여행·직구 정보를 다루는 전문 �
 [기타 규칙]
 - 분야와 무관한 정보는 버려라.
 - 연도는 반드시 올해({year}년)로 써라. 옛 연도 금지.
+- 아래 검색 키워드 중 1~2개를 제목이나 본문에 자연스럽게 포함시켜라(억지로 나열하지 말 것): {keywords}
 - 글 길이는 고정하지 마라. 주제에 따라 300자부터 2000자까지 자연스럽게 써라. 내용이 끝나면 바로 끝내고, 억지로 채우거나 자르지 마라. 글마다 길이가 제각각이어야 자연스럽다.
 - 본문 중간, 이미지가 자연스러운 위치(예: 특정 상품·장소·음식·기기를 설명하는 문단 뒤)에 "[이미지: 영문 검색어 | 한글 설명]" 표시를 넣어라. 영문(3~5단어)은 이미지 검색용, 한글(짧게)은 이미지 대체텍스트(alt)용이다. 개수는 주제와 글 길이에 따라 자연스럽게(짧은 글은 0~1개, 긴 글은 3~4개). 예: "[이미지: Shanghai street food | 상하이 길거리 음식]".
 
@@ -231,11 +248,14 @@ def call_deepseek(prompt):
 def generate(items, category):
     year = datetime.datetime.now().year
     angle = random.choice(CATEGORY_ANGLES[category])
+    kw_list = KEYWORDS.get(category, [])
+    keywords = "、".join(random.sample(kw_list, min(4, len(kw_list))))
     prompt = PROMPT.format(
         category=category,
         guide=CATEGORY_GUIDE[category],
         angle=angle,
         year=year,
+        keywords=keywords,
     ) + "\n\n中文信息条目：\n" + "\n".join(f"- {i}" for i in items)
     raw = call_deepseek(prompt)
 
