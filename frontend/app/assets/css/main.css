@@ -357,6 +357,11 @@ img { max-width: 100%; display: block; }
 .article-engagement {
   max-width: 780px;
   margin: 24px auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 .like-btn {
   display: inline-flex;
@@ -389,6 +394,46 @@ img { max-width: 100%; display: block; }
   background: #fff1f2;
 }
 .like-btn.is-liked .like-icon { fill: #e11d48; stroke: #e11d48; }
+
+/* ============ 分享按钮 ============ */
+.share-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.share-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+  font-family: inherit;
+}
+.share-btn:hover { border-color: var(--accent); color: var(--accent); }
+.share-kakao {
+  background: #fae100;
+  border-color: #fae100;
+  color: #3a1d1d;
+}
+.share-kakao:hover { background: #f7d800; border-color: #f7d800; color: #3a1d1d; }
+
+/* ============ 相关文章 ============ */
+.related {
+  max-width: 780px;
+  margin: 40px auto 0;
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 700px) {
+  .related-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ============ 评论 ============ */
 .comments {

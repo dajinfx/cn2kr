@@ -86,6 +86,21 @@ useHead({
         description: '중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다',
       }),
     },
+    // Kakao 分享 SDK（카카오톡 공유용）
+    {
+      src: 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.1/kakao.min.js',
+      defer: true,
+      crossorigin: 'anonymous',
+    },
   ],
+})
+
+// Kakao SDK 初始化（需要 NUXT_PUBLIC_KAKAO_APP_KEY）
+onMounted(() => {
+  const config = useRuntimeConfig()
+  const key = config.public.kakaoAppKey
+  if (window.Kakao && key && !window.Kakao.isInitialized()) {
+    window.Kakao.init(key)
+  }
 })
 </script>

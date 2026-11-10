@@ -29,6 +29,8 @@ export default defineNuxtConfig({
       // Supabase（anon key 是公开的，故意用 NUXT_PUBLIC_ 前缀）
       supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL || '',
       supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY || '',
+      // Kakao 分享（JavaScript app key，公开）
+      kakaoAppKey: process.env.NUXT_PUBLIC_KAKAO_APP_KEY || '',
     },
   },
 
