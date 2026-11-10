@@ -31,6 +31,8 @@ export default defineNuxtConfig({
       supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY || '',
       // Kakao 分享（JavaScript app key，公开）
       kakaoAppKey: process.env.NUXT_PUBLIC_KAKAO_APP_KEY || '',
+      // UAT 测试环境标记（uat 项目设 NUXT_PUBLIC_IS_UAT=true 时加 noindex）
+      isUat: process.env.NUXT_PUBLIC_IS_UAT || '',
     },
   },
 

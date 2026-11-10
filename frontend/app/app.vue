@@ -100,9 +100,14 @@ useHead({
   ],
 })
 
+// UAT 构建时加 noindex（防止测试站被搜索引擎收录，避免重复内容）
+const config = useRuntimeConfig()
+if (config.public.isUat === 'true') {
+  useHead({ meta: [{ name: 'robots', content: 'noindex, nofollow' }] })
+}
+
 // Kakao SDK 初始化（需要 NUXT_PUBLIC_KAKAO_APP_KEY）
 onMounted(() => {
-  const config = useRuntimeConfig()
   const key = config.public.kakaoAppKey
   if (window.Kakao && key && !window.Kakao.isInitialized()) {
     window.Kakao.init(key)
