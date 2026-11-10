@@ -28,15 +28,15 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 |------|------|
 | pipeline 脚本 | `D:\Git\cn2kr\pipeline\pipeline.py` |
 | pipeline 配置 | `D:\Git\cn2kr\pipeline\config.json`（含 DeepSeek key） |
-| 配图脚本 | `D:\Git\cn2kr\pipeline\fetch_images.py`（Wikimedia Commons 真实照片） |
+| 配图脚本 | `D:\Git\cn2kr\pipeline\fetch_images.py`（Wikimedia 真实照片，多层兜底+去重+城市映射） |
 | 前端项目 | `D:\Git\cn2kr\frontend\` |
-| 内容目录 | `D:\Git\cn2kr\frontend\content\articles\`（34 篇 md） |
+| 内容目录 | `D:\Git\cn2kr\frontend\content\articles\`（33 篇 md） |
 | 配图目录 | `D:\Git\cn2kr\frontend\public\images\`（jpg/png 真实照片 + 旧 svg） |
 | 前端设计 | `app\assets\css\main.css` + `app\pages\` + `app\components\` |
 | 数据库 schema | `D:\Git\cn2kr\supabase\schema.sql`（likes/comments 表 + RLS） |
 | 部署文档 | `D:\Git\cn2kr\SETUP_DEPLOY.md`（Supabase + Cloudflare Pages） |
 | 环境变量模板 | `D:\Git\cn2kr\frontend\.env.example`（SUPABASE_URL + ANON_KEY） |
-| 自动化脚本 | `D:\Git\cn2kr\auto_update.bat`（每天 8 点，Windows 计划任务 `cn2kr-daily`） |
+| 自动化 | `.github/workflows/daily.yml`（GitHub Actions 云端，每天 8:00 KST，1篇/天） |
 
 ## 当前进度
 
@@ -50,17 +50,25 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 8. ✅ 点赞/评论加固：匿名 client_id 幂等去重、IP 滑动窗口限流、honeypot 蜜罐、`approved` 审核字段
 9. ✅ **迁移到 Supabase + 静态托管**：删掉 `server/`（SQLite/Nitro），点赞/评论改走 Supabase 客户端直连；`nuxt generate` 静态生成；写好 `schema.sql` + `SETUP_DEPLOY.md` + `.env.example`
 10. ✅ **正式上线**：Cloudflare Pages 部署 + 域名 `cn2kr.net` + DNS + SSL；Supabase 建项目跑 schema（likes/comments 表 + RLS，publishable key 可用）
-11. ✅ **去 AI 味儿提示词**：第一人称(저는/제가) + 具体细节 + 禁套话（총정리/안녕하세요/오늘은 等）+ 温度 0.7
-12. ✅ **敬语规则**：允许 합니다체(-ㅂ니다) 和 해요체(-요)，只禁 반말（只对新文章生效，旧文章保持原样）
+11. ✅ **去 AI 味儿提示词**：具体细节 + 禁套话（총정리/안녕하세요/오늘은 等）+ 温度 0.7
+12. ✅ **敬语规则**：允许 합니다체(-ㅂ니다) 和 해요체(-요)，只禁 반말
 13. ✅ **字体优化**：Pretendard（jsdelivr CDN）+ 字间距微调
-14. ✅ **SEO/AEO**：@nuxtjs/sitemap 自动 sitemap.xml + robots.txt + 每页 meta 标签 + Article/WebSite JSON-LD + lang=ko
-15. ✅ **首页版面优化**：卡片去边框改柔和阴影 + 栏目标题 + 圆角加大
+14. ✅ **SEO/AEO**：@nuxtjs/sitemap 自动 sitemap.xml + robots.txt + 每页 meta + Article/WebSite JSON-LD + lang=ko
+15. ✅ **首页版面优化**：卡片去边框改柔和阴影 + 栏目标题
 16. ✅ **UAT/PRD 双环境**：`cn2kr.net`(main) + `uat.cn2kr.net`(uat)，两个独立 Pages 项目
-17. ✅ **每日自动更新**：Windows 计划任务 `cn2kr-daily`，每天 8 点跑 auto_update.bat（抓热点→生成→配图→git push→自动上线）
-18. ✅ **URL 改成英文关键词 slug**：pipeline 让 DeepSeek 生成英文 slug，`migrate_slugs.py` 迁移全部 35 篇 + 配图（`/articles/china-high-speed-rail-korean-tips` 这种，不再是时间戳）
-19. ✅ **搜索引擎收录**：Naver（등록+검증+sitemap）、Google（验证+sitemap）、Bing（验证）全部完成，验证文件在 `frontend/public/`（naver1f33f8...html、googlec611c4...html、BingSiteAuth.xml）
-20. ✅ **自然化文章**：字数随内容(300~2000)、正文多图(数量随内容)、敬语(합니다체+해요체禁반말)、去AI味
-21. 🔄 **待办**：Google/Bing 提交 sitemap 确认、Google 登录（表已预留 user_id）、评论审核后台、上广告、站内搜索、分页（~100篇时做）、关键词策略、内链建设
+17. ✅ **每日自动更新**：先 Windows 计划任务，后迁移到 GitHub Actions 云端（见 21）
+18. ✅ **URL 关键词 slug**：pipeline 让 DeepSeek 生成英文 slug，`migrate_slugs.py` 迁移全部文章（`/articles/china-high-speed-rail-korean-tips` 这种，不再是时间戳）
+19. ✅ **搜索引擎收录**：Naver（등록+검증+sitemap）、Google（验证+sitemap）、Bing（验证）全部完成，验证文件在 `frontend/public/`
+20. ✅ **配图多层兜底**：搜索词简化（去尾巴词）+ 图片去重 + 城市标志景点映射（청두→Chengdu panda 等），修掉重复图/错城市/无关图
+21. ✅ **迁移 GitHub Actions**：自动更新搬到云端（DeepSeek key 存 GitHub Secret，pipeline 支持环境变量+相对路径），不依赖本地电脑开机
+22. ✅ **卡片悬浮样式**：缩略图 16:9 固定比例 + 图片四角圆角 + flex-shrink（修 70px 窄条 + 标题被裁）
+23. ✅ **合并/删除重复文章**：删 17 篇重复（50 → 33 篇）
+24. ✅ **About 页**：E-E-A-T 信任（站点使命/内容制作/编辑原则/免责声明/联系），导航+页脚入口
+25. ✅ **文章语气改客观**：去掉「저는/제가/직접」第一人称编造，改「整理·指南」客观语气
+26. ✅ **降发布频率**：每天 3 篇 → 1 篇（三个分类按日期轮流）
+27. ✅ **相关文章推荐**（同分类内链）+ **分享按钮**（카카오톡/X/페이스북/링크복사）
+28. ✅ **站内搜索**（搜索页 + 头部搜索图标）+ **首页加载更多**（初始 12 篇，点「더 보기」逐步显示）
+29. 🔄 **待办**：Google 登录（表已预留 user_id）、评论审核后台、上广告、关键词策略/二级分类、图片 alt 韩文化、实用工具（汇率/关税计算器）、变现（AdSense/联盟）、Kakao App Key（启用原生分享卡片）
 
 ## UI 方向（用户明确要的）
 
