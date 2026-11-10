@@ -637,6 +637,104 @@ img { max-width: 100%; display: block; }
 .load-more:hover { border-color: var(--accent); color: var(--accent); }
 .load-more-count { color: var(--muted); font-weight: 400; }
 
+/* ============ 实用工具 ============ */
+.tools-hero {
+  padding: 48px 0 24px;
+  text-align: center;
+}
+.tools-hero h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.tools-hero p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 56px;
+}
+@media (max-width: 700px) {
+  .tools-grid { grid-template-columns: 1fr; }
+}
+.tool-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+.tool-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.tool-note {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.tool-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.tool-field span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--body);
+}
+.tool-field input,
+.tool-field select {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+}
+.tool-field input:focus,
+.tool-field select:focus { outline: none; border-color: var(--accent); }
+.tool-swap {
+  text-align: center;
+  color: var(--muted);
+  font-size: 18px;
+  margin: 4px 0 14px;
+}
+.tool-result {
+  font-size: 14px;
+  color: var(--body);
+  margin-top: 4px;
+}
+.tool-rate-edit {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.tool-duty {
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0 8px;
+}
+.tool-duty.free { background: #ecfdf5; }
+.tool-duty.pay { background: #fff7ed; }
+.duty-free { color: #059669; font-size: 15px; font-weight: 600; }
+.duty-pay { color: #c2410c; font-size: 15px; }
+
 /* ============ 页脚 ============ */
 .footer { background: var(--ink); color: #94a3b8; padding: 56px 0 32px; margin-top: 56px; }
 .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }

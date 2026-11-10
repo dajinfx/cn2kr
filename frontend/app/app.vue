@@ -15,6 +15,7 @@
             {{ cat.name }}
           </NuxtLink>
           <NuxtLink to="/about">소개</NuxtLink>
+          <NuxtLink to="/tools">도구</NuxtLink>
           <NuxtLink to="/search" aria-label="검색" class="nav-search">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M10 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 1.5A4.5 4.5 0 1 1 10 14.5 4.5 4.5 0 0 1 10 5.5zm6.2 10.3 3.5 3.5-1.06 1.06-3.5-3.5a7.5 7.5 0 0 1-1.1-1.1z" fill="currentColor"/></svg>
           </NuxtLink>
@@ -44,6 +45,7 @@
           <div class="col">
             <h4>사이트</h4>
             <NuxtLink to="/about">소개</NuxtLink>
+            <NuxtLink to="/tools">실용 도구</NuxtLink>
           </div>
         </div>
         <div class="footer-bottom">© {{ new Date().getFullYear() }} cn2kr — All rights reserved</div>
