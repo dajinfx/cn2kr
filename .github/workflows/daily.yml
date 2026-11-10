@@ -26,9 +26,15 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          python pipeline.py --category tech --count 1
-          python pipeline.py --category travel --count 1
-          python pipeline.py --category direct --count 1
+          # 每天只发 1 篇，三个分类按日期轮流（tech/travel/direct 循环）
+          DAY=$(date +%j)
+          case $((DAY % 3)) in
+            0) CAT=tech ;;
+            1) CAT=travel ;;
+            2) CAT=direct ;;
+          esac
+          echo "今日分类: $CAT"
+          python pipeline.py --category "$CAT" --count 1
           python fetch_images.py
 
       - name: Commit and push
