@@ -22,12 +22,17 @@
           <h2 class="yahoo-sec-title">최신</h2>
           <div class="yahoo-feed">
             <NuxtLink v-for="p in visiblePosts" :key="p.path" :to="p.path" class="yahoo-feed-item">
-              <h3>{{ p.title }}</h3>
-              <span class="yahoo-feed-meta">
-                <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
-                <span>·</span>
-                <span>{{ formatDate(p.meta?.date) }}</span>
-              </span>
+              <div class="yahoo-feed-body">
+                <h3>{{ p.title }}</h3>
+                <span class="yahoo-feed-meta">
+                  <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
+                  <span>·</span>
+                  <span>{{ formatDate(p.meta?.date) }}</span>
+                </span>
+              </div>
+              <div class="yahoo-feed-thumb">
+                <img :src="p.meta?.image" :alt="p.title" loading="lazy" />
+              </div>
             </NuxtLink>
           </div>
           <div v-if="visiblePosts.length < restPosts.length" class="load-more-wrap">

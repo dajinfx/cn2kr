@@ -786,11 +786,14 @@ img { max-width: 100%; display: block; }
 
 .yahoo-feed { margin-top: 4px; }
 .yahoo-feed-item {
-  display: block;
+  display: flex;
+  gap: 14px;
+  align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid var(--line);
 }
-.yahoo-feed-item h3 {
+.yahoo-feed-body { flex: 1; min-width: 0; }
+.yahoo-feed-body h3 {
   font-size: 1rem;
   font-weight: 700;
   color: var(--ink);
@@ -805,6 +808,15 @@ img { max-width: 100%; display: block; }
   font-size: 12px;
   color: var(--muted);
 }
+.yahoo-feed-thumb {
+  flex: none;
+  width: 100px;
+  aspect-ratio: 16/9;
+  border-radius: 6px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e293b, #2563eb);
+}
+.yahoo-feed-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
 /* 右：widgets */
 .widget {
