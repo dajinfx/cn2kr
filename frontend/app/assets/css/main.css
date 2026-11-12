@@ -872,6 +872,55 @@ img { max-width: 100%; display: block; }
 .widget-list a { font-size: 14px; color: var(--body); }
 .widget-list a:hover { color: var(--accent); }
 
+/* ============ 大图卡片网格 ============ */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 8px 0 32px;
+}
+@media (max-width: 900px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .card-grid { grid-template-columns: 1fr; }
+}
+.img-card {
+  display: block;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15,23,42,.06);
+  transition: box-shadow .2s, transform .2s;
+}
+.img-card:hover { box-shadow: 0 12px 32px rgba(15,23,42,.12); transform: translateY(-3px); }
+.img-card-thumb {
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e293b, #2563eb);
+}
+.img-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.img-card-body { padding: 16px 18px 18px; }
+.img-card-body h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.img-card:hover h3 { color: var(--accent); }
+.img-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
 /* ============ 页脚 ============ */
 .footer { background: var(--ink); color: #94a3b8; padding: 56px 0 32px; margin-top: 56px; }
 .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }
