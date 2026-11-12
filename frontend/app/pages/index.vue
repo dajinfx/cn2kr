@@ -31,7 +31,7 @@
                 </span>
               </div>
               <div class="yahoo-feed-thumb">
-                <img :src="p.meta?.image" :alt="p.title" loading="lazy" />
+                <img :src="p.meta?.image" :alt="p.title" loading="eager" />
               </div>
             </NuxtLink>
           </div>
