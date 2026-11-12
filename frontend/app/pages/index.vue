@@ -32,12 +32,17 @@
         <!-- 新闻流 -->
         <div class="news-list">
           <NuxtLink v-for="p in feedPosts" :key="p.path" :to="p.path" class="news-item">
-            <h3>{{ p.title }}</h3>
-            <span class="news-meta">
-              <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
-              <span>·</span>
-              <span>{{ formatDate(p.meta?.date) }}</span>
-            </span>
+            <div class="news-thumb">
+              <img :src="p.meta?.image" :alt="p.title" loading="eager" />
+            </div>
+            <div class="news-body">
+              <h3>{{ p.title }}</h3>
+              <span class="news-meta">
+                <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
+                <span>·</span>
+                <span>{{ formatDate(p.meta?.date) }}</span>
+              </span>
+            </div>
           </NuxtLink>
         </div>
 
