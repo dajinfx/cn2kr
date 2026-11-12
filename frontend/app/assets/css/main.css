@@ -735,6 +735,131 @@ img { max-width: 100%; display: block; }
 .duty-free { color: #059669; font-size: 15px; font-weight: 600; }
 .duty-pay { color: #c2410c; font-size: 15px; }
 
+/* ============ Yahoo 式首页（左文字流 + 右 widgets） ============ */
+.yahoo-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 32px;
+  align-items: start;
+  padding: 24px 0 48px;
+}
+.yahoo-right { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 16px; }
+@media (max-width: 900px) {
+  .yahoo-main { grid-template-columns: 1fr; }
+  .yahoo-right { display: none; }
+}
+
+/* 左：新闻文字流 */
+.yahoo-section { margin-bottom: 32px; }
+.yahoo-sec-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 4px;
+}
+.yahoo-rank { list-style: none; }
+.yahoo-rank-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.yahoo-num {
+  flex: none;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #94a3b8;
+  line-height: 1.3;
+  width: 26px;
+}
+.yahoo-rank-item:nth-child(-n+3) .yahoo-num { color: var(--accent); }
+.yahoo-rank-item h3 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.yahoo-rank-item:hover h3 { color: var(--accent); }
+
+.yahoo-feed { margin-top: 4px; }
+.yahoo-feed-item {
+  display: block;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.yahoo-feed-item h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.45;
+  margin-bottom: 4px;
+}
+.yahoo-feed-item:hover h3 { color: var(--accent); }
+.yahoo-feed-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 右：widgets */
+.widget {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.widget-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.widget-rate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--body);
+}
+.widget-eq { color: var(--muted); }
+.widget-rate strong { color: var(--ink); font-size: 1.1rem; }
+.widget-link {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.widget-rank { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.widget-rank a { display: flex; gap: 8px; align-items: flex-start; }
+.widget-num {
+  flex: none;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #94a3b8;
+}
+.widget-rank li:nth-child(-n+3) .widget-num { color: var(--accent); }
+.widget-text {
+  font-size: 13px;
+  color: var(--body);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.widget-rank a:hover .widget-text { color: var(--accent); }
+.widget-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.widget-list a { font-size: 14px; color: var(--body); }
+.widget-list a:hover { color: var(--accent); }
+
 /* ============ 页脚 ============ */
 .footer { background: var(--ink); color: #94a3b8; padding: 56px 0 32px; margin-top: 56px; }
 .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }

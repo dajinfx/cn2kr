@@ -1,56 +1,79 @@
 <template>
   <div>
-    <!-- 头条焦点区 -->
-    <section v-if="featured" class="hero">
-      <div class="container">
-        <NuxtLink :to="featured.path" class="hero-card">
-          <img
-            :src="featured.meta?.image"
-            :alt="featured.title"
-            loading="eager"
-          />
-          <div class="hero-scrim"></div>
-          <div class="hero-content">
-            <span class="hero-cat" :style="{ background: featuredColor }">
-              {{ featured.meta?.category }}
-            </span>
-            <h1>{{ featured.title }}</h1>
-            <p>{{ featured.description }}</p>
-            <span class="hero-more">자세히 보기 →</span>
+    <!-- 两栏：左文字流 + 右 widgets -->
+    <div class="container yahoo-main">
+      <!-- 左：新闻文字流 -->
+      <div class="yahoo-left">
+        <!-- 헤드라인 -->
+        <div class="yahoo-section">
+          <h2 class="yahoo-sec-title">헤드라인</h2>
+          <ol class="yahoo-rank">
+            <li v-for="(p, i) in topPosts" :key="p.path">
+              <NuxtLink :to="p.path" class="yahoo-rank-item">
+                <span class="yahoo-num">{{ i + 1 }}</span>
+                <h3>{{ p.title }}</h3>
+              </NuxtLink>
+            </li>
+          </ol>
+        </div>
+
+        <!-- 최신 -->
+        <div class="yahoo-section">
+          <h2 class="yahoo-sec-title">최신</h2>
+          <div class="yahoo-feed">
+            <NuxtLink v-for="p in visiblePosts" :key="p.path" :to="p.path" class="yahoo-feed-item">
+              <h3>{{ p.title }}</h3>
+              <span class="yahoo-feed-meta">
+                <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
+                <span>·</span>
+                <span>{{ formatDate(p.meta?.date) }}</span>
+              </span>
+            </NuxtLink>
           </div>
-        </NuxtLink>
-      </div>
-    </section>
-
-    <!-- 分类标签页签 -->
-    <div class="tabs-wrap">
-      <div class="container">
-        <div class="tabs">
-          <button
-            v-for="tab in tabs"
-            :key="tab.slug"
-            :class="{ active: activeTab === tab.slug }"
-            @click="activeTab = tab.slug"
-          >
-            {{ tab.name }}
-          </button>
+          <div v-if="visiblePosts.length < restPosts.length" class="load-more-wrap">
+            <button class="load-more" type="button" @click="loadMore">
+              더 보기 <span class="load-more-count">({{ restPosts.length - visiblePosts.length }}개 남음)</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 杂志式混排（头条之后的其余文章） -->
-    <div class="container">
-      <div class="section-head">
-        <div class="left">
-          <h2>{{ activeTab === 'all' ? '최신 업데이트' : activeTab }}</h2>
-        </div>
-      </div>
-      <PostGrid :posts="visibleGridPosts" />
-      <div v-if="visibleGridPosts.length < gridPosts.length" class="load-more-wrap">
-        <button class="load-more" type="button" @click="loadMore">
-          더 보기 <span class="load-more-count">({{ gridPosts.length - visibleGridPosts.length }}개 남음)</span>
-        </button>
-      </div>
+      <!-- 右：widgets -->
+      <aside class="yahoo-right">
+        <!-- 환율 widget -->
+        <section class="widget">
+          <h3 class="widget-title">환율</h3>
+          <div class="widget-rate">
+            <span>1 CNY</span>
+            <span class="widget-eq">=</span>
+            <strong>{{ cnyToKrw }} KRW</strong>
+          </div>
+          <NuxtLink to="/tools" class="widget-link">환율·관세 계산기 →</NuxtLink>
+        </section>
+
+        <!-- 인기 글 widget -->
+        <section class="widget">
+          <h3 class="widget-title">인기 글</h3>
+          <ol class="widget-rank">
+            <li v-for="(p, i) in popularPosts" :key="p.path">
+              <NuxtLink :to="p.path">
+                <span class="widget-num">{{ i + 1 }}</span>
+                <span class="widget-text">{{ p.title }}</span>
+              </NuxtLink>
+            </li>
+          </ol>
+        </section>
+
+        <!-- 카테고리 widget -->
+        <section class="widget">
+          <h3 class="widget-title">카테고리</h3>
+          <ul class="widget-list">
+            <li v-for="cat in CATEGORIES" :key="cat.slug">
+              <NuxtLink :to="`/category/${cat.slug}`">{{ cat.name }}</NuxtLink>
+            </li>
+          </ul>
+        </section>
+      </aside>
     </div>
   </div>
 </template>
@@ -58,45 +81,41 @@
 <script setup>
 import { CATEGORIES, categoryColor } from '~/composables/useCategories'
 
-const tabs = [{ name: '전체', slug: 'all' }, ...CATEGORIES]
-const activeTab = ref('all')
-
 const { data: posts } = await useAsyncData('home-posts', () =>
   queryCollection('articles').all()
 )
 
-// 按日期倒序
 const sortedPosts = computed(() =>
   [...(posts.value || [])].sort((a, b) =>
     (b.meta?.date || '').localeCompare(a.meta?.date || '')
   )
 )
 
-const filteredPosts = computed(() => {
-  if (activeTab.value === 'all') return sortedPosts.value
-  const cat = CATEGORIES.find((c) => c.slug === activeTab.value)
-  return sortedPosts.value.filter((p) => p.meta?.category === cat?.name)
-})
+// 헤드라인 = 前 5 篇；최신 = 其余
+const topPosts = computed(() => sortedPosts.value.slice(0, 5))
+const restPosts = computed(() => sortedPosts.value.slice(5))
 
-// 头条 = 当前分类下第一篇；网格 = 其余
-const featured = computed(() => filteredPosts.value[0] || null)
-const gridPosts = computed(() => filteredPosts.value.slice(1))
-const featuredColor = computed(() => categoryColor(featured.value?.meta?.category))
+const popularPosts = computed(() => sortedPosts.value.slice(0, 8))
 
-// 加载更多：初始显示 12 篇，点「더 보기」逐步显示
-const visibleCount = ref(12)
-const visibleGridPosts = computed(() => gridPosts.value.slice(0, visibleCount.value))
+// 汇率（约 1 CNY ≈ 190 KRW）
+const cnyToKrw = 190
+
+const visibleCount = ref(15)
+const visiblePosts = computed(() => restPosts.value.slice(0, visibleCount.value))
 
 function loadMore() {
-  visibleCount.value += 12
+  visibleCount.value += 15
 }
 
-// 切换分类时重置
-watch(activeTab, () => {
-  visibleCount.value = 12
-})
+function formatDate(d) {
+  if (!d) return ''
+  try {
+    return new Date(d).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })
+  } catch {
+    return d
+  }
+}
 
-// 首页 SEO
 useSeoMeta({
   title: 'cn2kr — 중국 테크·여행·직구',
   description: '중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다. 중국 직구, 여행, 테크 실전 정보를 매일 업데이트합니다.',
