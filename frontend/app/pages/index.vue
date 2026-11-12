@@ -1,59 +1,95 @@
 <template>
   <div>
-    <!-- 分类标签页签 -->
-    <div class="tabs-wrap">
-      <div class="container">
-        <div class="tabs">
-          <button
-            v-for="tab in tabs"
-            :key="tab.slug"
-            :class="{ active: activeTab === tab.slug }"
-            @click="activeTab = tab.slug"
-          >
-            {{ tab.name }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 大图卡片网格 -->
-    <div class="container">
-      <div class="section-head">
-        <div class="left">
-          <h2>{{ activeTab === 'all' ? '전체' : activeTab }}</h2>
-        </div>
-      </div>
-
-      <div class="card-grid">
-        <NuxtLink v-for="p in visiblePosts" :key="p.path" :to="p.path" class="img-card">
-          <div class="img-card-thumb">
-            <img :src="p.meta?.image" :alt="p.title" loading="eager" />
+    <!-- 两栏：左主内容 + 右 widgets -->
+    <div class="container yahoo-main">
+      <!-- 左栏：主内容 -->
+      <div class="yahoo-left">
+        <!-- 大头图头条 -->
+        <NuxtLink v-if="lead" :to="lead.path" class="lead-card">
+          <div class="lead-thumb">
+            <img :src="lead.meta?.image" :alt="lead.title" loading="eager" />
           </div>
-          <div class="img-card-body">
+          <div class="lead-body">
+            <h1>{{ lead.title }}</h1>
+            <span class="lead-meta">
+              <span :style="{ color: categoryColor(lead.meta?.category) }">{{ lead.meta?.category }}</span>
+              <span>·</span>
+              <span>{{ formatDate(lead.meta?.date) }}</span>
+            </span>
+          </div>
+        </NuxtLink>
+
+        <!-- 排名标题 -->
+        <ol class="rank-list">
+          <li v-for="(p, i) in rankPosts" :key="p.path">
+            <NuxtLink :to="p.path" class="rank-item">
+              <span class="rank-num">{{ i + 2 }}</span>
+              <h3>{{ p.title }}</h3>
+            </NuxtLink>
+          </li>
+        </ol>
+
+        <!-- 新闻流 -->
+        <div class="news-list">
+          <NuxtLink v-for="p in feedPosts" :key="p.path" :to="p.path" class="news-item">
             <h3>{{ p.title }}</h3>
-            <div class="img-card-meta">
+            <span class="news-meta">
               <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
               <span>·</span>
               <span>{{ formatDate(p.meta?.date) }}</span>
-            </div>
-          </div>
-        </NuxtLink>
+            </span>
+          </NuxtLink>
+        </div>
+
+        <div v-if="feedPosts.length < allRestPosts.length" class="load-more-wrap">
+          <button class="load-more" type="button" @click="loadMore">
+            더 보기 <span class="load-more-count">({{ allRestPosts.length - feedPosts.length }}개 남음)</span>
+          </button>
+        </div>
       </div>
 
-      <div v-if="visiblePosts.length < filteredPosts.length" class="load-more-wrap">
-        <button class="load-more" type="button" @click="loadMore">
-          더 보기 <span class="load-more-count">({{ filteredPosts.length - visiblePosts.length }}개 남음)</span>
-        </button>
-      </div>
+      <!-- 右栏：widgets -->
+      <aside class="yahoo-right">
+        <!-- 인기 글 widget（带小图） -->
+        <section class="widget">
+          <h3 class="widget-title">인기 글</h3>
+          <ul class="widget-pop">
+            <li v-for="(p, i) in popularPosts" :key="p.path">
+              <NuxtLink :to="p.path">
+                <img :src="p.meta?.image" :alt="p.title" loading="eager" />
+                <span class="widget-pop-text">{{ p.title }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
+        </section>
+
+        <!-- 환율 widget -->
+        <section class="widget">
+          <h3 class="widget-title">환율</h3>
+          <div class="widget-rate">
+            <span>1 CNY</span>
+            <span class="widget-eq">=</span>
+            <strong>190 KRW</strong>
+          </div>
+          <NuxtLink to="/tools" class="widget-link">환율·관세 계산기 →</NuxtLink>
+        </section>
+
+        <!-- 카테고리 widget -->
+        <section class="widget">
+          <h3 class="widget-title">카테고리</h3>
+          <ul class="widget-list">
+            <li v-for="cat in CATEGORIES" :key="cat.slug">
+              <NuxtLink :to="`/category/${cat.slug}`">{{ cat.name }}</NuxtLink>
+            </li>
+          </ul>
+        </section>
+      </aside>
     </div>
   </div>
 </template>
 
 <script setup>
 import { CATEGORIES, categoryColor } from '~/composables/useCategories'
-
-const tabs = [{ name: '전체', slug: 'all' }, ...CATEGORIES]
-const activeTab = ref('all')
 
 const { data: posts } = await useAsyncData('home-posts', () =>
   queryCollection('articles').all()
@@ -65,22 +101,19 @@ const sortedPosts = computed(() =>
   )
 )
 
-const filteredPosts = computed(() => {
-  if (activeTab.value === 'all') return sortedPosts.value
-  const cat = CATEGORIES.find((c) => c.slug === activeTab.value)
-  return sortedPosts.value.filter((p) => p.meta?.category === cat?.name)
-})
+// 大头图头条 = 第一篇；排名 = 2-5；新闻流 = 其余
+const lead = computed(() => sortedPosts.value[0] || null)
+const rankPosts = computed(() => sortedPosts.value.slice(1, 5))
+const allRestPosts = computed(() => sortedPosts.value.slice(5))
 
-const visibleCount = ref(12)
-const visiblePosts = computed(() => filteredPosts.value.slice(0, visibleCount.value))
+const popularPosts = computed(() => sortedPosts.value.slice(0, 5))
+
+const visibleCount = ref(15)
+const feedPosts = computed(() => allRestPosts.value.slice(0, visibleCount.value))
 
 function loadMore() {
-  visibleCount.value += 12
+  visibleCount.value += 15
 }
-
-watch(activeTab, () => {
-  visibleCount.value = 12
-})
 
 function formatDate(d) {
   if (!d) return ''
