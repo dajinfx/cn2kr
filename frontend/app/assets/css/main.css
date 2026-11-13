@@ -983,7 +983,7 @@ img { max-width: 100%; display: block; }
 }
 .news-thumb {
   flex: none;
-  width: 140px;
+  width: 200px;
   aspect-ratio: 16/9;
   border-radius: 8px;
   overflow: hidden;
@@ -1028,6 +1028,30 @@ img { max-width: 100%; display: block; }
   overflow: hidden;
 }
 .widget-pop a:hover .widget-pop-text { color: var(--accent); }
+
+/* ============ 三栏门户布局 ============ */
+.portal-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+  padding: 24px 0 48px;
+}
+.portal-left, .portal-right {
+  position: sticky;
+  top: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (max-width: 1280px) {
+  .portal-grid { grid-template-columns: minmax(0, 1fr) 300px; }
+  .portal-left { display: none; }
+}
+@media (max-width: 900px) {
+  .portal-grid { grid-template-columns: 1fr; }
+  .portal-left, .portal-right { display: none; }
+}
 
 /* ============ 页脚 ============ */
 .footer { background: var(--ink); color: #94a3b8; padding: 56px 0 32px; margin-top: 56px; }
