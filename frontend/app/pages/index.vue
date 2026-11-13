@@ -42,12 +42,17 @@
           </div>
         </NuxtLink>
 
-        <!-- 排名标题 -->
+        <!-- 排名小卡片 -->
         <ol class="rank-list">
           <li v-for="(p, i) in rankPosts" :key="p.path">
-            <NuxtLink :to="p.path" class="rank-item">
-              <span class="rank-num">{{ i + 2 }}</span>
-              <h3>{{ p.title }}</h3>
+            <NuxtLink :to="p.path" class="rank-card">
+              <div class="rank-thumb">
+                <img :src="p.meta?.image" :alt="p.title" loading="eager" />
+              </div>
+              <div class="rank-body">
+                <span class="rank-num">{{ i + 2 }}</span>
+                <h3>{{ p.title }}</h3>
+              </div>
             </NuxtLink>
           </li>
         </ol>
