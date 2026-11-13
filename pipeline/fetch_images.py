@@ -117,7 +117,11 @@ def derive_query(title, category):
         if q and len(q) <= 60:
             return q
     except Exception as e:
-        print(f"    [DeepSeek 翻译失败，用分类兜底] {e}")
+        print(f"    [DeepSeek 翻译失败，尝试城市/分类兜底] {e}")
+    # 先按标题提取城市（항저우→Hangzhou West Lake），提不到才用分类兜底
+    city = extract_city(title)
+    if city:
+        return city
     fb = CATEGORY_FALLBACK.get(category, ["China"])
     return fb[0] if isinstance(fb, list) else fb
 
