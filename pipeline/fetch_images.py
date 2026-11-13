@@ -105,9 +105,11 @@ def call_deepseek(prompt):
 def derive_query(title, category):
     """韩文标题 → 英文图片检索词（DeepSeek，失败则用分类兜底）"""
     prompt = (
-        "把下面这个韩文文章标题翻译成一个简短的英文图片搜索关键词（3~6 个英文单词，"
-        "适合在图片库搜相关照片）。只输出关键词本身，不要解释、不要标点、不要引号。\n\n"
-        f"标题：{title}\n分类：{category}\n\n关键词："
+        "下面是一篇韩文文章标题。请从中提取「具体的人/产品/地点/场景/物体」，翻译成 3~6 个英文单词的图片搜索词，"
+        "要具体到能搜到和文章内容直接相关的照片（比如具体产品名、具体地名、具体场景），"
+        "不要只给「online shopping」「China travel」这种泛泛的分类词。\n"
+        "只输出搜索词本身，不要解释、不要标点、不要引号。\n\n"
+        f"标题：{title}\n分类：{category}\n\n搜索词："
     )
     try:
         q = call_deepseek(prompt)
@@ -116,7 +118,8 @@ def derive_query(title, category):
             return q
     except Exception as e:
         print(f"    [DeepSeek 翻译失败，用分类兜底] {e}")
-    return CATEGORY_FALLBACK.get(category, "China")
+    fb = CATEGORY_FALLBACK.get(category, ["China"])
+    return fb[0] if isinstance(fb, list) else fb
 
 
 def wm_search(query, limit=6, retries=4):
