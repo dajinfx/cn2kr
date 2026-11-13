@@ -129,6 +129,11 @@ def _get(url, timeout=15):
 
 
 # ---------------------------------------------------------------- 1. 信息源
+# 配图策略（重要）：
+#   1) 如果原始信息源自带配图 → 直接用原图，不修改、不新增
+#   2) 如果原始信息源没有配图 → 用 DeepSeek 生成精确搜索词，去图库找高度相关的图
+# 当前三个源（百度热搜/今日头条/什么值得买RSS）都是纯文字、无图，
+# 所以走第 2 条路（fetch_images.py 里用精确搜索词 + 相关兜底词）。
 def fetch_baidu_hot(limit=15):
     url = "https://top.baidu.com/api/board?platform=wise&tab=realtime"
     data = json.loads(_get(url))
