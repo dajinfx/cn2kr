@@ -35,11 +35,11 @@ UA = {"User-Agent": "cn2kr-image-fetcher/1.0 (personal project)"}
 
 GOOD_MIME = {"image/jpeg", "image/png"}
 
-# 分类兜底检索词（多个，逐个尝试；都用「保证是中国」的词）
+# 分类兜底检索词（多个，逐个尝试；都用「和分类相关」的词）
 CATEGORY_FALLBACK = {
-    "중국 테크": ["China technology", "Shanghai"],
-    "중국 여행": ["Great Wall of China", "Forbidden City"],
-    "중국 직구": ["Shanghai", "China"],
+    "중국 테크": ["China technology", "smartphone"],
+    "중국 여행": ["Great Wall of China", "China travel"],
+    "중국 직구": ["online shopping", "Taobao"],
 }
 
 # 韩国语城市名 → 英文检索词（从标题提取城市，作为兜底；用「标志性景点」而非城市名，避免配到地铁图/铁路等无关图）
