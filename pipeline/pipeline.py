@@ -224,8 +224,9 @@ def collect_items():
 PROMPT = """당신은 중국 테크·여행·직구 정보를 다루는 전문 에디터다. 아래의 중국 실시간 인기 정보를 보고, 한국 독자에게 진짜 도움 되는 글 한 편을 써라.
 
 【분야】{category}
-【이번 글의 소재】{angle}（이 소재를 중심으로, 다른 글과 겹치지 않게）
 {guide}
+
+【选题要求 — 가장 중요】아래 참고 정보(中文信息条目)에서 "가장 구체적이고 새로운" 주제 하나를 골라라. 그 주제 하나에 깊게 파고들어, 제목과 본문에 구체적인 제품명·지명·이슈·숫자를 담아라. 다른 글과 겹치는 뻔한 주제는 피하고, 이 글만의 구체적인 소재를 정해라.
 
 [글쓰기 스타일 — 가장 중요하다]
 - 객관적인 정보 가이드처럼 써라. '저는/제가/제 생각' 같은 1인칭 체험담으로 쓰지 말고, 사실과 정보를 차분히 정리·설명하는 톤으로 써라.
@@ -311,13 +312,11 @@ def topic_overlap(title, existing_titles):
 
 def generate(items, category):
     year = datetime.datetime.now().year
-    angle = random.choice(CATEGORY_ANGLES[category])
     kw_list = KEYWORDS.get(category, [])
     keywords = "、".join(random.sample(kw_list, min(4, len(kw_list))))
     prompt = PROMPT.format(
         category=category,
         guide=CATEGORY_GUIDE[category],
-        angle=angle,
         year=year,
         keywords=keywords,
     ) + "\n\n中文信息条目：\n" + "\n".join(f"- {i}" for i in items)
