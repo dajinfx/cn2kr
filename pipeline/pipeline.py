@@ -55,7 +55,7 @@ def load_config():
     cfg.setdefault("model", "deepseek-chat")
     cfg.setdefault("output_dir", DEFAULT_OUTPUT_DIR)
     cfg.setdefault("image_dir", DEFAULT_IMAGE_DIR)
-    cfg.setdefault("sources", {"baidu_hot": True, "toutiao_hot": True, "smzdm_rss": True})
+    cfg.setdefault("sources", {"baidu_hot": True, "toutiao_hot": True, "smzdm_rss": True, "jianshu": True})
 
     if not cfg.get("deepseek_api_key"):
         print("❌ 找不到 DeepSeek API key（需要 config.json 或 DEEPSEEK_API_KEY 环境变量）")
@@ -175,6 +175,21 @@ def fetch_smzdm_rss(limit=10):
     return out
 
 
+def fetch_jianshu(limit=15):
+    """抓取简书热门文章（标题+摘要），作为选题素材（主题多样，避免重复）"""
+    url = "https://www.jianshu.com/asimov/trending/now"
+    data = json.loads(_get(url))
+    out = []
+    for item in data:
+        obj = item.get("object", {}) or {}
+        d = obj.get("data", {}) or {}
+        title = (d.get("title") or "").strip()
+        abbr = (d.get("public_abbr") or "").strip()
+        if title:
+            out.append(f"{title}｜{abbr[:100]}" if abbr else title)
+    return out[:limit]
+
+
 def collect_items():
     items = []
     src = CFG.get("sources", {})
@@ -196,6 +211,12 @@ def collect_items():
             print("✅ 什么值得买", end="  ")
         except Exception as e:
             print(f"⚠️ 什么值得买失败", end="  ")
+    if src.get("jianshu", True):
+        try:
+            items += fetch_jianshu()
+            print("✅ 简书", end="  ")
+        except Exception as e:
+            print(f"⚠️ 简书失败", end="  ")
     return items
 
 
@@ -397,15 +418,19 @@ def main():
             return
         print(f"共 {len(items)} 条")
 
-        article = generate(items, category)
+        # 去重检查：主题重复则换角度重试（最多 5 次）
+        existing = load_existing_titles()
+        article = None
+        for attempt in range(5):
+            article = generate(items, category)
+            if not topic_overlap(article["title"], existing):
+                break
+            print(f"⚠️ 主题重复，换角度重试 ({attempt + 1}/5)")
+        if article is None or topic_overlap(article["title"], existing):
+            print("⚠️ 连续 5 次都重复，本篇跳过")
+            continue
         print(f"标题：{article['title']}")
         print(f"摘要：{article['description']}")
-
-        # 去重检查：主题重复则跳过，换下一个角度重试
-        existing = load_existing_titles()
-        if topic_overlap(article["title"], existing):
-            print(f"⚠️ 主题重复，跳过（已有同类文章）")
-            continue
 
         if args.dry_run:
             print(article["content"][:250] + "...")
