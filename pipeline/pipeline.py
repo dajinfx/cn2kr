@@ -70,6 +70,7 @@ CATEGORY_NAMES = {
     "tech": "중국 테크",
     "travel": "중국 여행",
     "direct": "중국 직구",
+    "society": "중국사회",
 }
 
 # 分类专属配图渐变色
@@ -77,6 +78,7 @@ CATEGORY_COLORS = {
     "중국 테크": ["#1e3a8a", "#2563eb", "#0ea5e9"],
     "중국 여행": ["#064e3b", "#10b981", "#34d399"],
     "중국 직구": ["#7c2d12", "#f97316", "#fbbf24"],
+    "중국사회": ["#4c1d95", "#8b5cf6", "#c4b5fd"],
 }
 
 # 分类写作方向
@@ -84,6 +86,7 @@ CATEGORY_GUIDE = {
     "중국 테크": "중국 테크에 집중: AI, 스마트폰, 전기차, 반도체, 로봇, 신가전 등. 한국인이 관심 가질 중국 테크 트렌드, 직구 가이드, 피해야 할 함정을 다뤄라.",
     "중국 여행": "중국 여행에 집중: 인기 도시, 명소, 음식, 교통, 결제, 비자. 한국인의 중국 여행 코스, 꼭 가볼 곳, 실전 팁, 피해야 할 것.",
     "중국 직구": "중국 직구/해외직구에 집중: 타오바오, 1688, 핀둬둬, 테무, 알리익스프레스. 한국인이 어떻게 사는지, 돈 아끼는 법, 함정 피하기, 추천 상품, 결제·배송.",
+    "중국사회": "중국의 사회·문화·생활·경제·법률·교육·취미 등 일상과 사회 이슈에 집중. 한국인이 궁금해할 중국의 생활상, 사회 이슈, 문화, 제도 변화를 다뤄라.",
 }
 
 # 每篇随机切入角度，避免标题/内容重复
@@ -116,6 +119,10 @@ KEYWORDS = {
     "중국 직구": [
         "중국 직구", "타오바오 직구", "알리익스프레스", "테무",
         "1688 직구", "배송대행", "직구 관세", "직구 가품",
+    ],
+    "중국사회": [
+        "중국 생활", "중국 문화", "중국 사회", "중국 경제",
+        "중국 교육", "중국 취업", "중국 결혼", "중국 집값",
     ],
 }
 
@@ -399,7 +406,7 @@ image: "{image_url}"
 def main():
     global CFG
     ap = argparse.ArgumentParser()
-    ap.add_argument("--category", default="direct", choices=["tech", "travel", "direct"], help="分类")
+    ap.add_argument("--category", default="direct", choices=["tech", "travel", "direct", "society"], help="分类")
     ap.add_argument("--count", type=int, default=1, help="生成几篇")
     ap.add_argument("--dry-run", action="store_true", help="只生成不写文件")
     args = ap.parse_args()

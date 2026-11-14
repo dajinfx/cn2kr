@@ -3,6 +3,7 @@ export const CATEGORIES = [
   { name: '중국 테크', slug: 'tech', color: '#2563eb' },
   { name: '중국 여행', slug: 'travel', color: '#10b981' },
   { name: '중국 직구', slug: 'direct', color: '#f97316' },
+  { name: '중국사회', slug: 'society', color: '#8b5cf6' },
 ]
 
 export function categoryColor(name) {

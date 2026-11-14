@@ -40,6 +40,7 @@ CATEGORY_FALLBACK = {
     "중국 테크": ["China technology", "smartphone"],
     "중국 여행": ["Great Wall of China", "China travel"],
     "중국 직구": ["online shopping", "Taobao"],
+    "중국사회": ["China", "Chinese culture"],
 }
 
 # 韩国语城市名 → 英文检索词（从标题提取城市，作为兜底；用「标志性景点」而非城市名，避免配到地铁图/铁路等无关图）
