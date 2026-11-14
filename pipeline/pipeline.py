@@ -250,6 +250,44 @@ def call_deepseek(prompt):
     return resp["choices"][0]["message"]["content"]
 
 
+# ---------------------------------------------------------------- 去重
+# 主题关键词（判断新文章主题是否和已有文章重复）
+TOPIC_KEYWORDS = [
+    "드론", "로봇", "스마트폰", "테무", "알리", "타오바오", "1688",
+    "청두", "충칭", "고속철", "딥시크", "반도체", "전기차", "테슬라",
+    "환불", "관세", "가품", "웨어러블", "노광기", "샤오미", "화웨이",
+    "베이징", "상하이", "시안", "리장", "다리", "항저우", "쑤저우", "장가계",
+    "길거리 음식", "생태계",
+]
+
+
+def load_existing_titles():
+    """读取已有文章标题（用于去重）"""
+    out_dir = Path(CFG.get("output_dir", DEFAULT_OUTPUT_DIR))
+    titles = []
+    try:
+        for f in out_dir.glob("*.md"):
+            txt = f.read_text(encoding="utf-8")
+            m = re.search(r'title:\s*"([^"]+)"', txt)
+            if m:
+                titles.append(m.group(1))
+    except Exception:
+        pass
+    return titles
+
+
+def topic_overlap(title, existing_titles):
+    """判断新标题主题是否和已有标题重复"""
+    new_topics = {kw for kw in TOPIC_KEYWORDS if kw in title}
+    if not new_topics:
+        return False
+    for t in existing_titles:
+        for kw in new_topics:
+            if kw in t:
+                return True
+    return False
+
+
 def generate(items, category):
     year = datetime.datetime.now().year
     angle = random.choice(CATEGORY_ANGLES[category])
@@ -362,6 +400,12 @@ def main():
         article = generate(items, category)
         print(f"标题：{article['title']}")
         print(f"摘要：{article['description']}")
+
+        # 去重检查：主题重复则跳过，换下一个角度重试
+        existing = load_existing_titles()
+        if topic_overlap(article["title"], existing):
+            print(f"⚠️ 主题重复，跳过（已有同类文章）")
+            continue
 
         if args.dry_run:
             print(article["content"][:250] + "...")
