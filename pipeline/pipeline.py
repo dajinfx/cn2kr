@@ -55,7 +55,7 @@ def load_config():
     cfg.setdefault("model", "deepseek-chat")
     cfg.setdefault("output_dir", DEFAULT_OUTPUT_DIR)
     cfg.setdefault("image_dir", DEFAULT_IMAGE_DIR)
-    cfg.setdefault("sources", {"baidu_hot": True, "toutiao_hot": True, "smzdm_rss": True, "jianshu": True})
+    cfg.setdefault("sources", {"baidu_hot": True, "toutiao_hot": True, "smzdm_rss": True, "jianshu": True, "sspai": True})
 
     if not cfg.get("deepseek_api_key"):
         print("❌ 找不到 DeepSeek API key（需要 config.json 或 DEEPSEEK_API_KEY 环境变量）")
@@ -197,6 +197,19 @@ def fetch_jianshu(limit=15):
     return out[:limit]
 
 
+def fetch_sspai(limit=10):
+    """抓取少数派 RSS（中国数码/效率工具媒体，主题贴科技）"""
+    url = "https://sspai.com/feed"
+    raw = _get(url)
+    items = re.findall(r"<item>(.*?)</item>", raw, re.S)
+    out = []
+    for it in items[:limit]:
+        m = re.search(r"<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>", it, re.S)
+        if m:
+            out.append(m.group(1).strip())
+    return out
+
+
 def collect_items():
     items = []
     src = CFG.get("sources", {})
@@ -224,6 +237,12 @@ def collect_items():
             print("✅ 简书", end="  ")
         except Exception as e:
             print(f"⚠️ 简书失败", end="  ")
+    if src.get("sspai", True):
+        try:
+            items += fetch_sspai()
+            print("✅ 少数派", end="  ")
+        except Exception as e:
+            print(f"⚠️ 少数派失败", end="  ")
     return items
 
 
