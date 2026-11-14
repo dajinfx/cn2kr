@@ -4,14 +4,14 @@
 
 ## 项目是什么
 
-**cn2kr** —— 面向韩国人的"中国综合门户"网站。三大板块：**科技(중국 테크) / 美景旅行(중국 여행) / 电商(중국 직구)**。
+**cn2kr** —— 面向韩国人的"中国综合门户"网站。四大板块：**科技(중국 테크) / 美景旅行(중국 여행) / 电商(중국 직구) / 社会(중국사회)**。
 
 ## 最终架构（已抛弃 WordPress）
 
 ```
-中文信息源(百度热搜/今日头条/什么值得买)
+中文信息源(百度热搜/今日头条/什么值得买/简书/少数派)
   ↓ Python pipeline 抓取
-DeepSeek API 加工（翻译+本土化+随机切入角度）
+DeepSeek API 加工（翻译+本土化+从热搜自由选题）
   ↓ 存 Markdown（带 frontmatter + 真实照片配图）
 Nuxt 4 + @nuxt/content 读取
   ↓ nuxt generate 静态生成
@@ -30,7 +30,7 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 | pipeline 配置 | `D:\Git\cn2kr\pipeline\config.json`（含 DeepSeek key） |
 | 配图脚本 | `D:\Git\cn2kr\pipeline\fetch_images.py`（Wikimedia 真实照片，多层兜底+去重+城市映射） |
 | 前端项目 | `D:\Git\cn2kr\frontend\` |
-| 内容目录 | `D:\Git\cn2kr\frontend\content\articles\`（33 篇 md） |
+| 内容目录 | `D:\Git\cn2kr\frontend\content\articles\`（34 篇 md） |
 | 配图目录 | `D:\Git\cn2kr\frontend\public\images\`（jpg/png 真实照片 + 旧 svg） |
 | 前端设计 | `app\assets\css\main.css` + `app\pages\` + `app\components\` |
 | 数据库 schema | `D:\Git\cn2kr\supabase\schema.sql`（likes/comments 表 + RLS） |
@@ -68,14 +68,25 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 26. ✅ **降发布频率**：每天 3 篇 → 1 篇（三个分类按日期轮流）
 27. ✅ **相关文章推荐**（同分类内链）+ **分享按钮**（카카오톡/X/페이스북/링크복사）
 28. ✅ **站内搜索**（搜索页 + 头部搜索图标）+ **首页加载更多**（初始 12 篇，点「더 보기」逐步显示）
-29. 🔄 **待办**：Google 登录（表已预留 user_id）、评论审核后台、上广告、关键词策略/二级分类、图片 alt 韩文化、实用工具（汇率/关税计算器）、变现（AdSense/联盟）、Kakao App Key（启用原生分享卡片）
+29. ✅ **首页改 Yahoo 式三栏门户布局**：左 widgets + 主新闻流（大头图头条+排名小卡片+图文新闻流）+ 右 widgets，浅灰背景，白色卡片浮起
+30. ✅ **配图精确化**：搜索词改成「具体产品/场景」（非泛分类词），DeepSeek 失败时先按标题提取城市（항저우→西湖），分类兜底词也改成相关词（직구→online shopping）
+31. ✅ **全站封面图重配**：37 篇全部重配（精确搜索词 + 城市兜底），修掉了테무配上海全景、청두配长城等错图
+32. ✅ **canonical 补上**（之前漏了）+ **删 4 篇最新重复文章**（로봇·드론/청두충칭고속철/AI앱/알리）+ `_redirects` 301 重定向
+33. ✅ **pipeline 去重检查**：生成后跟已有标题比对主题（TOPIC_KEYWORDS），重复则换题重试（最多 5 次）
+34. ✅ **方案 B 自由选题**：取消固定 10 个角度，让 DeepSeek 每天从当天热搜自己挑具体主题（主题跟着新鲜内容走，不再重复）
+35. ✅ **新增「중국사회」分类**：4 分类（테크/여행/직구/사회），每日轮换，配图兜底+关键词都加了
+36. ✅ **新增信息源**：简书（泛生活/社会话题，归入중국사회）+ 少数派（数码/科技 RSS）。知乎要登录(401)、36氪feed空、虎嗅超时，暂不加
+37. ✅ **旧文章改第三人称**：31 篇的「저는/제가/직접 써보니/다녀와 보니」全部改写为客观指南语气（已验证 0 残留）
+38. ✅ **prompt 加 H2 小标题 + 官方出处**：新文章带 2~4 个 `## H2 小标题`，涉及法规时附官方机构链接
+39. 🔄 **待办**：Google 登录（表已预留 user_id）、评论审核后台、上广告、二级分类/标签、图片 alt 韩文化、变现（AdSense/联盟）、Kakao App Key（原生分享卡片）、知乎/36氪/虎嗅信息源（需解决反爬）
 
 ## UI 方向（用户明确要的）
 
-- 用户喜欢 **Naver 新闻那种"看似非规则但正规"的杂志式布局**
-- 已经实现：**CSS Grid 杂志混排**（`card--large` 2×2 大卡、`card--wide` 2×1 横排、`card--tall` 1×2 高卡 + 普通卡，`grid-auto-flow: dense`）+ 顶部分类标签页签（전체/테크/여행/직구，可点击筛选）
-- 配色：科技蓝 #2563eb / 旅行绿 #10b981 / 电商橙 #f97316（分类专属色，定义在 `app/composables/useCategories.js`）
-- 用户刚说"不喜欢"之前那版，要更明显的大小混排 → 已改成 Grid 杂志式，待用户确认
+- 用户要 **Yahoo 式「门户」布局**（反复强调不要 WordPress 博客味、不要纯文字列表）
+- 已实现：**三栏门户布局**（左 widgets 300px + 主新闻流 + 右 widgets 300px），主新闻流 = 大头图头条(21:9) + 排名小卡片(4列) + 图文新闻流(240px图)，浅灰背景 #f0f3f5 + 白色卡片浮起
+- 配色：科技蓝 #2563eb / 旅行绿 #10b981 / 电商橙 #f97316 / 社会紫 #8b5cf6（分类专属色，在 `app/composables/useCategories.js`）
+- 响应式：窄屏自动变两栏/单栏，侧栏隐藏
+- 注：Yahoo 真实 CSS 已抓取分析过（bg #f0f3f5、三栏 grid、feed 图 260px）
 
 ## 配图说明
 
@@ -92,7 +103,7 @@ cd D:\Git\cn2kr\frontend && npm run dev   # → localhost:3000
 
 # 生成更多内容
 cd D:\Git\cn2kr\pipeline && python pipeline.py --category tech --count 10
-# 分类：tech / travel / direct
+# 分类：tech / travel / direct / society
 
 # 查看 Hermes 频道配置
 hermes config get discord.allowed_channels
