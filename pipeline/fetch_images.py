@@ -319,11 +319,11 @@ def main():
 
     print(f"待处理 {len(todo)} 篇（配图还是 SVG）\n")
     ok = fail = 0
-    used = set()  # 全局已用图片标题（跨文章去重，避免不同文章配同一张图）
     for name, title, cat in todo:
         query = derive_query(title, cat)
+        used = set()  # 已用图片标题（封面和插图去重）
         print(f"{name}\n  标题: {title[:40]}\n  query: {query}")
-        time.sleep(2.5)  # 放慢节奏，避免 DeepSeek/Wikimedia 限流
+        time.sleep(1.2)  # Wikimedia 限速
         cand = pick_with_fallback(query, cat, skip_titles=used, title=title)
         if not cand:
             print("   -> 无匹配结果，保留 SVG ❌")

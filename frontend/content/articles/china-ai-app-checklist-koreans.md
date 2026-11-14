@@ -4,7 +4,7 @@ title: "중국 AI 앱 직구 전, 한국인이 꼭 확인할 4가지"
 category: "중국 테크"
 description: "중국 AI 툴 실사용 기준, 결제·접속·보안 함정 체크법"
 date: 2026-11-06
-image: "/images/china-ai-app-checklist-koreans.png"
+image: "/images/china-ai-app-checklist-koreans.jpg"
 ---
 중국 테크 분야에서 최근 한국 직구 이용자들이 가장 많이 검색하는 키워드는 AI 툴이다. 그러나 실제 결제 단계에서는 접속 차단, 한국 카드 결제 불가, 앱스토어 계정 잠김 등의 문제가 빈번하게 발생한다. 중국 AI 소프트웨어를 실제로 사용하려는 이용자를 기준으로, 비용과 시간을 절약할 수 있는 핵심 사항을 정리한다.
 

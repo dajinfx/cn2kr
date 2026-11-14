@@ -8,40 +8,27 @@
       </div>
     </section>
 
-    <!-- 图文新闻流（Yahoo 式，和首页一致） -->
     <div class="container">
-      <div class="section-head">
-        <div class="left">
-          <h2>{{ catName }} 최신</h2>
-        </div>
-      </div>
-      <div class="news-list">
-        <NuxtLink v-for="p in posts" :key="p.path" :to="p.path" class="news-item">
-          <div class="news-thumb">
-            <img :src="p.meta?.image" :alt="p.title" loading="eager" />
-          </div>
-          <div class="news-body">
-            <h3>{{ p.title }}</h3>
-            <span class="news-meta">
-              <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
-              <span>·</span>
-              <span>{{ formatDate(p.meta?.date) }}</span>
-            </span>
-          </div>
-        </NuxtLink>
-      </div>
+      <PostGrid
+        :posts="posts"
+        empty-title="아직 이 카테고리에 글이 없어요"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { CATEGORIES, categoryColor } from '~/composables/useCategories'
+import { categoryColor } from '~/composables/useCategories'
 
 const route = useRoute()
 
-const cat = computed(() => CATEGORIES.find((c) => c.slug === route.params.slug))
-const catName = computed(() => cat.value?.name || '카테고리')
-const catColor = computed(() => cat.value?.color || '#2563eb')
+const catMap = {
+  tech: '중국 테크',
+  travel: '중국 여행',
+  direct: '중국 직구',
+}
+const catName = computed(() => catMap[route.params.slug] || '카테고리')
+const catColor = computed(() => categoryColor(catName.value))
 
 const { data: allPosts } = await useAsyncData('all-posts-for-cat', () =>
   queryCollection('articles').all()
@@ -53,15 +40,6 @@ const posts = computed(() =>
     .filter((p) => p.meta?.category === catName.value)
     .sort((a, b) => (b.meta?.date || '').localeCompare(a.meta?.date || ''))
 )
-
-function formatDate(d) {
-  if (!d) return ''
-  try {
-    return new Date(d).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })
-  } catch {
-    return d
-  }
-}
 
 // 分类页 SEO
 useSeoMeta({

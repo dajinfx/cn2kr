@@ -4,7 +4,7 @@ title: "중국 테크 기업들이 요즘 조용히 갈아엎고 있는 것들"
 category: "중국 테크"
 description: "화웨이·샤오미·BYD 최근 동향과 직구 시 주의점"
 date: 2026-11-08
-image: "/images/china-tech-companies-2026-trends.png"
+image: "/images/china-tech-companies-2026-trends.jpg"
 ---
 중국 테크 뉴스를 매일 아침 확인하는 습관이 형성된 지 약 3년이 되었습니다. 처음에는 직구 시 가격 비교를 위해 시작했으나, 최근에는 업계 판도가 어떻게 돌아가는지를 살펴보는 흥미로 이어지고 있습니다. 2026년 들어 유난히 눈에 띄는 흐름이 몇 가지 있어, 실제 경험 사례와 함께 정리하고자 합니다.
 
