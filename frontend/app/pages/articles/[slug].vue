@@ -136,6 +136,7 @@ useSeoMeta({
   ogUrl: seoUrl,
   ogType: 'article',
   articlePublishedTime: computed(() => post.value?.meta?.date || ''),
+  canonical: seoUrl,
 })
 
 useHead({
