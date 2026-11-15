@@ -735,6 +735,39 @@ img { max-width: 100%; display: block; }
 .duty-free { color: #059669; font-size: 15px; font-weight: 600; }
 .duty-pay { color: #c2410c; font-size: 15px; }
 
+.rate-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.rate-tab {
+  flex: 1 1 auto;
+  min-width: 72px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.rate-tab:hover { border-color: var(--accent); }
+.rate-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.rate-tab-code { font-size: 11px; font-weight: 400; opacity: 0.7; margin-left: 2px; }
+.tool-live {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
 /* ============ Yahoo 式首页（左文字流 + 右 widgets） ============ */
 .yahoo-main {
   display: grid;
