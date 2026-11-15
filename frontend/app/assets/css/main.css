@@ -735,38 +735,55 @@ img { max-width: 100%; display: block; }
 .duty-free { color: #059669; font-size: 15px; font-weight: 600; }
 .duty-pay { color: #c2410c; font-size: 15px; }
 
-.rate-tabs {
+.rate-rows {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 18px;
 }
-.rate-tab {
-  flex: 1 1 auto;
-  min-width: 72px;
+.rate-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fafbfc;
+}
+.rate-row--base {
+  background: #eef4ff;
+  border-color: var(--accent);
+}
+.rate-row-input {
+  width: 120px;
   padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
-  color: var(--body);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
   font-family: inherit;
-  transition: all 0.15s;
+  color: var(--ink);
+  text-align: right;
 }
-.rate-tab:hover { border-color: var(--accent); }
-.rate-tab.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+.rate-row-input:focus { outline: none; border-color: var(--accent); }
+.rate-row-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--body);
+  white-space: nowrap;
 }
-.rate-tab-code { font-size: 11px; font-weight: 400; opacity: 0.7; margin-left: 2px; }
+.rate-row-rate {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
 .tool-live {
   margin-top: 10px;
   font-size: 12px;
   color: var(--muted);
 }
+.tool-live--warn { color: #c2410c; }
 
 /* ============ Yahoo 式首页（左文字流 + 右 widgets） ============ */
 .yahoo-main {
