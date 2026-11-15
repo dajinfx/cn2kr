@@ -72,13 +72,13 @@ import { ref, reactive, computed, onMounted } from 'vue'
 const CURRENCIES = reactive([
   { code: 'USD', name: '달러', scale: 1, decimals: 2, rate: 1337 },
   { code: 'CNY', name: '위안', scale: 1, decimals: 2, rate: 200 },
+  { code: 'JPY', name: '엔', scale: 1, decimals: 0, rate: 8.36 },
   { code: 'EUR', name: '유로', scale: 1, decimals: 2, rate: 1452 },
   { code: 'VND', name: '동', scale: 1000, decimals: 0, rate: 0.052 },
-  { code: 'JPY', name: '엔', scale: 1, decimals: 0, rate: 8.36 },
 ])
 
 // 基准：韩元金额（单一数据源）。各币种字段由它派生，改任何一个都会反向更新它。
-const krw = ref(20000)
+const krw = ref(10000)
 const loading = ref(true)
 const liveTime = ref('')
 
