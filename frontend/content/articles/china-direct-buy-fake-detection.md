@@ -4,7 +4,7 @@ title: "중국 직구 가품 걸러내는 5가지 신호 — 1688·타오바오�
 category: "중국 직구"
 description: "중국 직구 초보가 꼭 알아야 할 가품 구별 신호와 셀러 검증법."
 date: 2026-11-06
-image: "/images/china-direct-buy-fake-detection.jpg"
+image: "/images/china-direct-buy-fake-detection.jpg?v=20261115"
 ---
 중국 직구 시 가격만 확인하고 성급하게 구매한 뒤 가품을 수령하고 환불도 받지 못하는 사례가 적지 않습니다. 특히 1688이나 타오바오에서 "공장 직출"이라는 문구만 신뢰하고 결제하는 것은 위험합니다. 다음은 한국 직구 이용자가 실제로 활용할 수 있는 가품 구별 신호 다섯 가지입니다.
 

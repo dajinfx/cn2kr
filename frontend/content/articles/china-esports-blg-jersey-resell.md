@@ -3,7 +3,7 @@ title: "BLG 우승에 1400위안 리셀…중국 e스포츠 굿즈가 '금값' �
 category: "중국사회"
 description: "S16 우승 후 리닝 유니폼 품귀, 중국 굿즈 시장의 구조를 뜯어봅니다"
 date: 2026-11-15
-image: "/images/china-esports-blg-jersey-resell.jpg"
+image: "/images/china-esports-blg-jersey-resell.jpg?v=20261115"
 ---
 
 중국 e스포츠 팀 BLG가 리그 오브 레전드 월드 챔피언십(S16)에서 창단 첫 우승을 차지했습니다. 결승 상대는 GEN이었고 스코어는 3대 1. 미드 라이너 나이트(Knight)가 FMVP에 올랐습니다. 그런데 중국 현지에서 더 뜨거운 숫자는 따로 있습니다. 바로 유니폼 가격입니다.
@@ -14,7 +14,7 @@ BLG는 중국 스포츠 브랜드 리닝(李宁)과 콜라보 유니폼을 냈�
 
 이 구조는 한국 독자에게도 낯설지 않습니다. 한국에서도 롤드컵 우승 팀 굿즈가 웃돈을 붙여 거래되는 일이 흔합니다. 다만 중국은 규모가 다릅니다. 인구 기반이 크고, 리셀 시장이 하나의 산업처럼 자리 잡았습니다. 셴위 같은 플랫폼은 중고 거래를 넘어 사실상 '가격 발견 시장' 역할을 합니다.
 
-![BLG 리닝 콜라보 유니폼 리셀 게시물 화면](/images/china-esports-blg-jersey-resell-1.jpg)
+![BLG 리닝 콜라보 유니폼 리셀 게시물 화면](/images/china-esports-blg-jersey-resell-1.jpg?v=20261115)
 
 ## 우승이 부른 연쇄 효과, B站 대회원부터 스킨까지
 

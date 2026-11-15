@@ -4,11 +4,11 @@ title: "중국 고속철, 한국인이라면 이렇게 타야 표값을 뽑습�
 category: "중국 여행"
 description: "2026년 최신 중국 고속철 실전 경험담과 예매 팁"
 date: 2026-11-06
-image: "/images/china-high-speed-rail-korean-tips.jpg"
+image: "/images/china-high-speed-rail-korean-tips.jpg?v=20261115"
 ---
 작년 가을 상하이에서 베이징까지 고속철을 타고 이동한 사례가 있습니다. 비행기로 한 시간 반이면 갈 거리를 다섯 시간 넘게 앉아 간 셈인데, 그 시간이 아깝지 않았다는 평가가 있습니다. 창밖으로 허난성 평야가 끝없이 펼쳐지고, 중간중간 정차하는 도시마다 플랫폼에 내리는 사람들 표정이 달라서 보는 재미가 있습니다. 무엇보다 공항까지 가는 왕복 두 시간, 보안검색 대기, 수하물 찾는 시간을 다 합치면 비행기와 실제 소요 시간 차이가 크지 않습니다. 도심에서 도심으로 바로 붙는다는 것이 고속철의 진짜 강점입니다.
 
-![China high speed train interior](/images/china-high-speed-rail-korean-tips-1.jpg)
+![China high speed train interior](/images/china-high-speed-rail-korean-tips-1.jpg?v=20261115)
 
 중국 고속철은 노선 등급에 따라 G, D, C로 나뉩니다. G는 시속 300~350km급 간선, D는 200~250km급, C는 도시간 단거리입니다. 한국에서 온 여행자들이 가장 많이 타는 것은 상하이-항저우, 상하이-쑤저우, 베이징-시안 같은 G 노선입니다. 상하이 홍차오역에서 항저우 동역까지 G열차로 45분에서 1시간, 요금은 2등석 기준 73위안 안팎입니다. 2026년 현재 환율로 대략 1만 4천 원 정도이니, 한국 KTX로 같은 거리 가는 것보다 오히려 쌉니다. 쑤저우는 30분이면 닿고 요금은 40위안대입니다. 이 정도면 당일치기로도 충분합니다.
 
@@ -18,7 +18,7 @@ image: "/images/china-high-speed-rail-korean-tips.jpg"
 
 역에 도착하면 짐 검색대를 지나야 합니다. 공항처럼 엄격하진 않지만 액체류 검사는 합니다. 출발 40분 전 도착을 권합니다. 상하이 홍차오역처럼 큰 역은 플랫폼까지 걷는 거리가 제법 됩니다. 표는 앱에 있는 QR로 개찰구를 통과하면 되고, 종이표를 뽑을 필요는 없습니다. 다만 역마다 개찰구 위치가 달라서 표에 찍힌 검표구 번호를 확인해야 헤매지 않습니다.
 
-![Shanghai Hongqiao railway station](/images/china-high-speed-rail-korean-tips-2.jpg)
+![Shanghai Hongqiao railway station](/images/china-high-speed-rail-korean-tips-2.jpg?v=20261115)
 
 차 안에서는 물과 간식을 미리 사두는 것이 좋습니다. 식당칸은 있지만 가격이 편의점의 두 배입니다. 역 안 편의점에서 왕라오지 같은 음료와 과자를 사서 들고 타면 됩니다. 콘센트는 좌석마다 있고, USB 충전도 됩니다. 와이파이는 차내에서 잡히긴 하는데 속도가 들쭉날쭉해서 한국에서 미리 유심이나 eSIM을 준비하는 편이 낫습니다.
 

@@ -4,7 +4,7 @@ title: "중국 직구 결제·환불, 돈 새는 구멍 막는 5가지"
 category: "중국 직구"
 description: "위안화 결제 수수료·환불 지연·부분 환불까지 실전 대처법"
 date: 2026-11-06
-image: "/images/china-cross-border-payment-refund-fixes.jpg"
+image: "/images/china-cross-border-payment-refund-fixes.jpg?v=20261115"
 ---
 중국 직구 초보자가 가장 많이 실수하는 단계는 결제 단계입니다. 카드사 환율에 수수료까지 붙어 결제 금액이 예상보다 부풀고, 물건이 오지 않았을 때 환불받는 절차도 한국 쇼핑몰과 크게 다릅니다. 타오바오·1688·핀둬둬·알리익스프레스를 다뤄본 경험을 바탕으로, 결제와 환불에서 실제로 비용이 새는 지점만 짚어 설명합니다.
 

@@ -4,13 +4,13 @@ title: "중국 노광기 모델 공개, 반도체 직구족이 봐야 할 현실
 category: "중국 테크"
 description: "中 노광기 진전과 미니PC·신가전 직구 함정 정리"
 date: 2026-11-09
-image: "/images/china-lithography-mini-pc-import-guide.jpg"
+image: "/images/china-lithography-mini-pc-import-guide.jpg?v=20261115"
 ---
 중국 테크 뉴스를 매일 살펴보면 최근 가장 눈에 띄는 분야는 반도체 쪽입니다. 얼마 전 중국이 차세대 노광기 모델을 공개했다는 소식이 국내에도 짧게 알려졌습니다. 이 뉴스를 보면 과거 선전(深圳) 화창베이 전자상가에서 부품을 구매하던 상황이 떠오릅니다. 당시 상인들이 "노광기는커녕 이 칩도 아직 만들지 못한다"고 농담하던 분위기가 있었는데, 그 사이 상황이 상당히 달라졌다는 인상을 줍니다.
 
 다만 냉정하게 설명하면, 모델 공개와 양산은 전혀 다른 문제입니다. 중국 반도체 장비 뉴스는 대개 "시제품 발표 → 파일럿 라인 → 수율 확보 → 양산"이라는 긴 단계를 거칩니다. 현재 단계는 그 단계의 아래쪽에 가깝습니다. 그럼에도 이 뉴스가 중요한 이유는 중국 로컬 장비 생태계가 자국산 라인을 전제로 부품·소재·검사 장비를 함께 육성하고 있다는 신호이기 때문입니다.
 
-![China semiconductor equipment factory](/images/china-lithography-mini-pc-import-guide-1.png)
+![China semiconductor equipment factory](/images/china-lithography-mini-pc-import-guide-1.png?v=20261115)
 
 이 흐름이 한국 소비자에게 직접 와닿는 지점은 따로 있습니다. 반도체 장비가 아니라 그 아래 단계인 완제품입니다. 최근 중국 테크 뉴스에서 눈에 띄는 것은 미니PC와 신가전입니다. 3세대 코어 울트라 미니PC가 같은 라인업인데 가격이 6배까지 벌어진다는 기사가 돌았습니다. 이유는 단순합니다. 한쪽은 내장 그래픽 성능에 비용을 투자하고, 다른 한쪽은 메인보드에 메모리를 용접해 교체할 수 없게 만든 뒤 가격을 낮춘 것입니다.
 
@@ -18,7 +18,7 @@ image: "/images/china-lithography-mini-pc-import-guide.jpg"
 
 또 하나, 중국 신가전은 "AI"라는 단어가 붙으면 가격이 크게 오릅니다. 그러나 실제로는 앱 연동과 음성인식 수준인 경우가 많습니다. 로봇청소기나 공기청정기처럼 국내 AS망이 필요한 제품은 특히 주의해야 합니다. 중국 내수용 모델은 전압이 220V라 큰 문제는 없지만, 앱이 중국 휴대폰 번호 인증을 요구하는 경우가 있습니다. 이는 직구 후에 가장 자주 문제가 되는 부분입니다.
 
-![Chinese robot vacuum cleaner](/images/china-lithography-mini-pc-import-guide-2.jpg)
+![Chinese robot vacuum cleaner](/images/china-lithography-mini-pc-import-guide-2.jpg?v=20261115)
 
 전기차 쪽은 뉴스만 보고 판단하기 어렵습니다. 중국 전기차 브랜드들이 기술력을 빠르게 높이는 것은 사실이지만, 국내에서는 충전 규격과 부품 수급, 보험료 문제가 남습니다. 중국 전기차를 국내에서 구매하는 것은 아직 시기상조로 보입니다. 대신 부품이나 액세서리 직구는 괜찮습니다. 블랙박스, 충전 케이블, 실내 소품 정도는 가격 차이가 커서 자주 이용되는 품목입니다.
 
