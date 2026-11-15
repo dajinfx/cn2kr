@@ -18,16 +18,11 @@
 </template>
 
 <script setup>
-import { categoryColor } from '~/composables/useCategories'
+import { CATEGORIES, categoryColor } from '~/composables/useCategories'
 
 const route = useRoute()
 
-const catMap = {
-  tech: '중국 테크',
-  travel: '중국 여행',
-  direct: '중국 직구',
-}
-const catName = computed(() => catMap[route.params.slug] || '카테고리')
+const catName = computed(() => CATEGORIES.find((c) => c.slug === route.params.slug)?.name || '카테고리')
 const catColor = computed(() => categoryColor(catName.value))
 
 const { data: allPosts } = await useAsyncData('all-posts-for-cat', () =>
