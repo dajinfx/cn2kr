@@ -14,6 +14,12 @@
         </p>
 
         <div class="rate-rows">
+          <label class="rate-row rate-row--base">
+            <input v-model.number="krw" type="number" min="0" step="any" inputmode="decimal" class="rate-row-input" />
+            <span class="rate-row-name">원 (KRW)</span>
+            <span class="rate-row-rate">기준 통화</span>
+          </label>
+
           <label v-for="c in CURRENCIES" :key="c.code" class="rate-row">
             <input
               v-model.number="amounts[c.code]"
@@ -25,12 +31,6 @@
             />
             <span class="rate-row-name">{{ c.name }} ({{ c.code }})</span>
             <span class="rate-row-rate">{{ scaleLabel(c) }} ≈ {{ fmtRate(c) }}</span>
-          </label>
-
-          <label class="rate-row rate-row--base">
-            <input v-model.number="krw" type="number" min="0" step="any" inputmode="decimal" class="rate-row-input" />
-            <span class="rate-row-name">원 (KRW)</span>
-            <span class="rate-row-rate">기준 통화</span>
           </label>
         </div>
 
@@ -70,11 +70,11 @@ import { ref, reactive, computed, onMounted } from 'vue'
 // ===== 汇率计算器 =====
 // rate = 1 단위 통화의 원(KRW) 가치. scale = 표시용 단위(동은 1000).
 const CURRENCIES = reactive([
-  { code: 'CNY', name: '위안', scale: 1, decimals: 2, rate: 200 },
   { code: 'USD', name: '달러', scale: 1, decimals: 2, rate: 1337 },
-  { code: 'JPY', name: '엔', scale: 1, decimals: 0, rate: 8.36 },
-  { code: 'VND', name: '동', scale: 1000, decimals: 0, rate: 0.052 },
+  { code: 'CNY', name: '위안', scale: 1, decimals: 2, rate: 200 },
   { code: 'EUR', name: '유로', scale: 1, decimals: 2, rate: 1452 },
+  { code: 'VND', name: '동', scale: 1000, decimals: 0, rate: 0.052 },
+  { code: 'JPY', name: '엔', scale: 1, decimals: 0, rate: 8.36 },
 ])
 
 // 基准：韩元金额（单一数据源）。各币种字段由它派生，改任何一个都会反向更新它。
