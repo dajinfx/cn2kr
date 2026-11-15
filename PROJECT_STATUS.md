@@ -38,6 +38,22 @@ Cloudflare Pages（静态托管，$0）+ Supabase（点赞/评论/未来登录�
 | 环境变量模板 | `D:\Git\cn2kr\frontend\.env.example`（SUPABASE_URL + ANON_KEY） |
 | 自动化 | `.github/workflows/daily.yml`（GitHub Actions 云端，每天 8:00 KST，1篇/天） |
 
+## 🚨 部署铁律（UAT 先行，顺序不可倒）
+
+> **所有修改必须先上 UAT，验收通过后才能上 PRD。这个顺序绝对不能倒过来。**
+
+| 环境 | 分支 | 域名 |
+|------|------|------|
+| UAT（测试） | `uat` | uat.cn2kr.net |
+| PRD（生产） | `main` | cn2kr.net |
+
+流程（严格按顺序）：
+
+1. 开发/修改 → 提交并推送到 **`uat`** 分支 → Cloudflare 自动部署到 `uat.cn2kr.net`
+2. 在 **UAT** 上验收（功能、样式、数据、配图、汇率等全部确认 OK）
+3. 验收通过 → 把改动同步/合并到 **`main`** → Cloudflare 自动部署到 `cn2kr.net`（PRD）
+4. ⚠️ **禁止直接改 `main` 跳过 UAT 验收**；PRD 永远只接受 UAT 验证过的内容
+
 ## 当前进度
 
 1. ✅ pipeline 已跑通，30 篇内容（科技10+旅行10+电商10，均衡）
