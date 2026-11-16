@@ -72,6 +72,7 @@ img { max-width: 100%; display: block; }
 }
 .nav a:hover,
 .nav a.router-link-active { background: rgba(37, 99, 235, .08); color: var(--accent); }
+.nav-right { margin-left: auto; display: flex; gap: 4px; align-items: center; }
 
 /* ============ 头条焦点区 ============ */
 .hero { padding: 24px 0 0; }

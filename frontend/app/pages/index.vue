@@ -95,8 +95,8 @@
         <section class="widget">
           <h3 class="widget-title">cn2kr</h3>
           <ul class="widget-list">
-            <li><NuxtLink to="/about">소개</NuxtLink></li>
-            <li><NuxtLink to="/tools">실용 도구</NuxtLink></li>
+            <li><NuxtLink to="/about">about</NuxtLink></li>
+            <li><NuxtLink to="/tools">Tool</NuxtLink></li>
             <li><NuxtLink to="/search">검색</NuxtLink></li>
           </ul>
         </section>
