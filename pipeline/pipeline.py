@@ -5,7 +5,8 @@
 零依赖（只用 Python 标准库）
 
 铁律：
-- 配图铁律：从哪里获得文章，就抓原文图片做首图（原文没图才图库兜底）。
+- 配图铁律：原文有几个图就用几个图（全部用上、不设数量上限）；原文配图≥2 时绝不另找图；
+  图片文件名用 slug / slug-N 规范命名，绝不照抄原文文件名；原文确实没图才兜底。
 - 内容铁律：原文不能机翻，要润色成自然韩文；核心内容（事实/数字/结论）不改。
 
 用法：
@@ -797,18 +798,20 @@ def resolve_cover(chosen, slug, category, image_dir):
     return generate_svg(category, slug, image_dir)
 
 
-def download_inline_images(slug, content, inline_images, image_dir, referer=None, max_inline=6):
+def download_inline_images(slug, content, inline_images, image_dir, referer=None, max_inline=None):
     """把原文插图(除头图外)放进正文，返回 (新正文, 张数)。
 
+    原文有几个图就用几个图——不设数量上限（max_inline 仅作极端保护，默认 None=全部用）。
     1) 先用原文图替换正文里的 [이미지: ...] 标记（按顺序）
-    2) 多余的原文图均匀插到段落之间（最多共 max_inline 张插图）
+    2) 多余的原文图均匀插到段落之间
     """
     if not inline_images:
         return content, 0
 
-    # 下载最多 max_inline 张插图
+    # 全部下载（不设上限）；文件名用 slug-N 规范命名，不照抄原文文件名
+    imgs = inline_images if max_inline is None else inline_images[:max_inline]
     rels = []
-    for i, u in enumerate(inline_images[:max_inline]):
+    for i, u in enumerate(imgs):
         rel = download_image(u, str(Path(image_dir) / f"{slug}-{i + 1}"), referer=referer)
         if rel:
             rels.append(rel)
