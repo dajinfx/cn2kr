@@ -11,6 +11,13 @@ export default defineNuxtConfig({
     description: '중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다',
   },
 
+  content: {
+    renderer: {
+      // 小标题不加锚点内链（去掉 AI 味）
+      anchorLinks: false,
+    },
+  },
+
   app: {
     head: {
       link: [
