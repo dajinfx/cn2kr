@@ -317,12 +317,38 @@ def filter_relevant(items, category, min_keep=3):
 
 
 # ---------------------------------------------------------------- 1.5 抓原文
+# 这些是头像/logo/图标/装饰图，不算正文配图，要过滤掉
+_BAD_IMG = (
+    "avatar", "logo", "icon", "emoji", "level", "the-end", "user_logo",
+    "default_", "qrcode", "wechat", "share", "loading", "placeholder",
+)
+_GOOD_IMG_EXT = (".jpg", ".jpeg", ".png", ".webp")
+
+
+def _extract_images(html, og):
+    """抽取页面全部正文配图：og:image 优先，再抓 <img>，过滤头像/logo/图标，去重"""
+    imgs = []
+    if og:
+        imgs.append(og)
+    for src in re.findall(r'<img[^>]+src=["\']([^"\']+)["\']', html):
+        u = normalize_url(src)
+        low = u.lower()
+        if not u or u in imgs:
+            continue
+        if not low.endswith(_GOOD_IMG_EXT):
+            continue
+        if any(b in low for b in _BAD_IMG):
+            continue
+        imgs.append(u)
+    return imgs
+
+
 def fetch_article(url, timeout=12):
-    """抓原文页面，返回 (正文文本, og:image)。失败返回 (None, None)"""
+    """抓原文页面，返回 (正文文本, og:image, 全部图片列表)。失败返回 (None, None, [])"""
     try:
         html = _get(url, timeout=timeout)
     except Exception:
-        return None, None
+        return None, None, []
 
     # og:image（两种属性顺序都兼容）
     og = None
@@ -330,6 +356,8 @@ def fetch_article(url, timeout=12):
          or re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', html))
     if m:
         og = normalize_url(m.group(1))
+
+    imgs = _extract_images(html, og)
 
     # 正文：抽取 <p> 文本
     paras = re.findall(r"<p[^>]*>(.*?)</p>", html, re.S)
@@ -341,7 +369,7 @@ def fetch_article(url, timeout=12):
         if len(t) >= 20:
             texts.append(t)
     body = "\n".join(texts)[:3000] if texts else None
-    return body, og
+    return body, og, imgs
 
 
 def enrich_items(items, max_fetch=8):
@@ -370,11 +398,13 @@ def enrich_items(items, max_fetch=8):
         if fetched >= max_fetch:
             break
         print(f"  抓原文: {it['src']} 《{it['title'][:22]}》...")
-        body, og = fetch_article(it["url"])
+        body, og, imgs = fetch_article(it["url"])
         if body:
             it["body"] = body
-        if not it.get("image") and og:
-            it["image"] = og
+        if imgs:
+            it["images"] = imgs
+            if not it.get("image"):
+                it["image"] = imgs[0]
         fetched += 1
         time.sleep(0.3)
     return items
@@ -622,18 +652,41 @@ def resolve_source(article, items):
 
 
 # ---------------------------------------------------------------- 4. 配图（原文图）
-def download_image(url, dest_base):
-    """下载图片到 dest_base.ext，返回相对路径 /images/xxx.ext 或 None"""
-    try:
-        req = urllib.request.Request(url, headers=UA)
+def download_image(url, dest_base, referer=None):
+    """下载图片到 dest_base.ext，返回相对路径 /images/xxx.ext 或 None。
+
+    referer：原文链接（很多图床/CDN 需要 Referer 防盗链，403 时带上原文页做 Referer）。
+    太小(<8KB)的图视为缩略图/占位图，跳过。
+    """
+    def _fetch(headers):
+        req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=30) as r:
-            data = r.read()
-            ctype = r.headers.get("Content-Type", "")
+            return r.read(), r.headers.get("Content-Type", "")
+
+    data, ctype = None, ""
+    try:
+        headers = dict(UA)
+        if referer:
+            headers["Referer"] = referer
+        data, ctype = _fetch(headers)
     except Exception as e:
-        print(f"    [图下载失败] {e}")
-        return None
-    if not data or len(data) < 1024:
-        print(f"    [图太小/为空，跳过]")
+        # 403 等防盗链：若无 referer，则用图片自身域名根再试一次
+        if referer is None:
+            try:
+                parts = urllib.parse.urlsplit(url)
+                ref = f"{parts.scheme}://{parts.netloc}/"
+                headers = dict(UA)
+                headers["Referer"] = ref
+                data, ctype = _fetch(headers)
+            except Exception:
+                print(f"    [图下载失败] {e}")
+                return None
+        else:
+            print(f"    [图下载失败] {e}")
+            return None
+
+    if not data or len(data) < 8 * 1024:
+        print(f"    [图太小/为空，跳过] {len(data) if data else 0}B")
         return None
 
     ext = None
@@ -684,12 +737,38 @@ def resolve_cover(chosen, slug, category, image_dir):
     """首图优先用原文头图；没有则抓的 og:image；再没有才 SVG 兜底"""
     img = (chosen or {}).get("image")
     if img:
-        rel = download_image(img, str(Path(image_dir) / slug))
+        rel = download_image(img, str(Path(image_dir) / slug), referer=(chosen or {}).get("url"))
         if rel:
             print(f"  ✅ 原文头图 -> {rel}")
             return rel
     print("  ⚠️ 无原文图，用 SVG 占位（之后 fetch_images.py 兜底）")
     return generate_svg(category, slug, image_dir)
+
+
+def download_inline_images(slug, content, inline_images, image_dir, referer=None):
+    """用原文剩余图片(除头图外)替换正文里的 [이미지: ...] 标记，返回 (新正文, 成功数)。
+
+    原文图用完但还有标记时，剩余标记留给 fetch_images.py 图库兜底。
+    """
+    if not inline_images:
+        return content, 0
+    markers = re.findall(r"\[이미지:\s*([^\]]+)\]", content)
+    if not markers:
+        return content, 0
+    pattern = re.compile(r"\[이미지:\s*[^\]]+\]")
+    new_content = content
+    ok = 0
+    for i, marker in enumerate(markers):
+        if i >= len(inline_images):
+            break
+        parts = [p.strip() for p in marker.split("|")]
+        alt = parts[1] if len(parts) > 1 and parts[1] else "이미지"
+        rel = download_image(inline_images[i], str(Path(image_dir) / f"{slug}-{i + 1}"), referer=referer)
+        if rel:
+            new_content = pattern.sub(f"![{alt}]({rel})", new_content, count=1)
+            print(f"  ✅ 原文插图{i + 1} -> {rel}")
+            ok += 1
+    return new_content, ok
 
 
 # ---------------------------------------------------------------- 5. 存 Markdown
@@ -796,6 +875,10 @@ def main():
 
         slug = make_slug(article.get("slug"))
         image_url = resolve_cover(chosen, slug, category, image_dir)
+        # 原文插图：用原文剩余图片(除头图外)替换正文里的 [이미지: ...] 标记
+        inline_imgs = (chosen or {}).get("images") or []
+        if len(inline_imgs) > 1:
+            article["content"], _ = download_inline_images(slug, article["content"], inline_imgs[1:], image_dir, referer=(chosen or {}).get("url"))
         source_url = (chosen or {}).get("url") or ""
         path = save_markdown(article, image_url, slug, source_url)
         print(f"✅ slug：{slug}")
