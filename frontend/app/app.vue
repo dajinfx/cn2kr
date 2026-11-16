@@ -37,6 +37,7 @@
           <div>
             <div class="logo">cn<span class="dot">2</span>kr</div>
             <p style="margin-top: 8px; font-size: 14px;">중국의 테크 · 여행 · 직구를 한국 시선으로 소개합니다</p>
+            <p style="margin-top: 12px; font-size: 14px; line-height: 1.7;">📧 jinguangdong_949<span>@</span>naver.com<br>📞 010-9638-5158</p>
           </div>
           <div class="col">
             <h4>카테고리</h4>
