@@ -9,6 +9,9 @@
       <div class="content">
         <ContentRenderer :value="post" />
       </div>
+      <div v-if="tags.length" class="article-tags">
+        <span v-for="t in tags" :key="t" class="tag-chip">{{ t }}</span>
+      </div>
     </article>
 
     <div v-if="post" class="article-engagement">
@@ -62,6 +65,14 @@ const date = computed(() => {
   } catch {
     return d
   }
+})
+
+// 标签（frontmatter tags，用于展示 + SEO keywords）
+const tags = computed(() => {
+  const t = post.value?.meta?.tags
+  if (Array.isArray(t)) return t.filter(Boolean)
+  if (typeof t === 'string') return t.split(',').map(s => s.trim()).filter(Boolean)
+  return []
 })
 
 // 相关文章（同分类，排除当前，最多 6 篇）
@@ -130,6 +141,7 @@ const seoUrl = computed(() =>
 useSeoMeta({
   title: seoTitle,
   description: seoDesc,
+  keywords: computed(() => tags.value.join(', ')),
   ogTitle: seoTitle,
   ogDescription: seoDesc,
   ogImage: seoImage,
@@ -149,6 +161,7 @@ useHead({
           '@type': 'Article',
           headline: seoTitle.value,
           description: seoDesc.value,
+          keywords: tags.value.join(', '),
           image: seoImage.value || undefined,
           datePublished: post.value?.meta?.date,
           dateModified: post.value?.meta?.date,

@@ -493,8 +493,9 @@ URL·링크를 지어내지 말 것. 출처 URL을 100% 확신할 수 없으면 
 제목: [순수 한국어 제목]
 설명: [한 줄 요약, 30자 이내, 순수 한국어]
 슬러그: [영문 키워드 슬러그, 소문자+하이픈만, 3~6단어]
+태그: [한국어 검색 키워드 3~5개, 쉼표로 구분. 한국인이 실제로 검색할 법한 구체적인 키워드, 예: 화웨이, 중국 전기차, AITO M8]
 
-(위 네 줄 다음부터 바로 본문을 써라. 본문에 별도의 '본문' 라벨은 붙이지 말 것.)
+(위 다섯 줄 다음부터 바로 본문을 써라. 본문에 별도의 '본문' 라벨은 붙이지 말 것.)
 
 후보 원문 목록:"""
 
@@ -637,6 +638,12 @@ def generate(items, category):
     desc = grab("설명") or ""
     slug = grab("슬러그") or ""
 
+    # 태그：한국어 검색 키워드 3~5개
+    tags = []
+    t = grab("태그")
+    if t:
+        tags = [x.strip() for x in re.split(r"[,，、]", t) if x.strip()][:6]
+
     # 来源链接（DeepSeek 原样复制的原文 URL，用于精确匹配候选）
     src_url = None
     m = re.search(r"来源链接\s*[:：]\s*(.+)", raw)
@@ -644,7 +651,7 @@ def generate(items, category):
         src_url = m.group(1).strip().strip(".,;，。；")
 
     content = raw
-    for field in ("来源链接", "제목", "설명", "슬러그"):
+    for field in ("来源链接", "제목", "설명", "슬러그", "태그"):
         content = re.sub(rf"^{field}\s*[:：].*\n?", "", content, count=1, flags=re.M)
     # 去掉可能残留的 '[본문]' / '[正文]' 标签行
     content = re.sub(r"^\[본문\]\s*", "", content, flags=re.M)
@@ -658,6 +665,7 @@ def generate(items, category):
         "content": content,
         "slug": slug,
         "source_url": src_url,
+        "tags": tags,
     }
 
 
@@ -861,13 +869,20 @@ def save_markdown(article, image_url, slug, source_url=""):
 
     src_line = f'source: "{source_url}"\n' if source_url else ""
 
+    tags = article.get("tags") or []
+    if tags:
+        tags_lines = "\n".join(f"  - {t}" for t in tags)
+        tags_block = f"tags:\n{tags_lines}\n"
+    else:
+        tags_block = ""
+
     md = f"""---
 title: "{article['title']}"
 category: "{article['category']}"
 description: "{article['description']}"
 date: {date}
 image: "{image_url}"
-{src_line}---
+{src_line}{tags_block}---
 
 {article['content']}
 """

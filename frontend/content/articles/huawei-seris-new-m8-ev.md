@@ -5,6 +5,10 @@ description: "화웨이와 싸이리스가 역할을 나눈 신형 M8 판매를 
 date: 2026-11-16
 image: "/images/huawei-seris-new-m8-ev.jpg"
 source: "https://www.ifanr.com/1689432?utm_source=rss&utm_medium=rss&utm_campaign="
+tags:
+  - 화웨이
+  - 중국 테크
+
 ---
 
 중국 전기차 시장에서 화웨이와 싸이리스의 합작 브랜드인 원제(원제)가 신형 M8을 내놓았습니다. 2025년 4월 첫 출시 이후 약 19개월 동안 19만 대 넘게 팔린 베스트셀러 모델을 대대적으로 다듬은 후속작입니다. 화웨이와 싸이리스는 이번 신차를 계기로 양사의 역할 분담도 다시 정리했습니다.

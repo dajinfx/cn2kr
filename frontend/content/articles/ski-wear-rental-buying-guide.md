@@ -5,6 +5,9 @@ description: "스키복 렌탈과 구매, 방수 지수로 따지는 실전 선�
 date: 2026-11-16
 image: "/images/ski-wear-rental-buying-guide.png"
 source: "https://post.smzdm.com/p/a4q462pk/"
+tags:
+  - 중국 직구
+
 ---
 
 스키장 문을 열기 전, 장비를 어떻게 마련할지부터 고민이 시작됩니다. 결론부터 말하면 이렇습니다. 스키 판과 부츠, 바인딩 같은 큰 장비는 처음에 빌리고, 피부에 닿는 다섯 가지 품목은 직접 사는 편이 낫습니다.
