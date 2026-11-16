@@ -54,9 +54,10 @@
       <section class="about-section">
         <h2>문의</h2>
         <p>
-          콘텐츠 오류 제보, 제휴 및 기타 문의는 아래 이메일로 연락 주세요.
+          콘텐츠 오류 제보, 제휴 및 기타 문의는 아래 연락처로 연락 주세요.
         </p>
-        <p class="about-contact">📧 contact@cn2kr.net</p>
+        <p class="about-contact">📧 jinguangdong_949@naver.com</p>
+        <p class="about-contact">📞 010-9638-5158</p>
       </section>
     </div>
   </div>
