@@ -36,7 +36,6 @@ jobs:
           esac
           echo "今日分类: $CAT"
           python pipeline.py --category "$CAT" --count 1
-          python fetch_images.py
 
       - name: Commit and push
         run: |
