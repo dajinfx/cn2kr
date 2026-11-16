@@ -400,12 +400,33 @@ def _extract_images(html, og):
     return imgs
 
 
+def _extract_videos(html, og_video):
+    """抽取页面视频：og:video 优先，再抓 iframe 嵌入（B站/腾讯/优酷/YouTube/爱奇艺/抖音等），最后 video/source 直链"""
+    vids = []
+    if og_video:
+        vids.append(og_video)
+    for src in re.findall(r'<iframe[^>]+src=["\']([^"\']+)["\']', html):
+        u = normalize_url(src)
+        low = u.lower()
+        if any(d in low for d in ("bilibili", "v.qq.com", "youku", "youtube", "youtu.be",
+                                   "iqiyi", "douyin", "ixigua", "kuaishou", "video.sina")):
+            if u not in vids:
+                vids.append(u)
+    for src in re.findall(r'<(?:video|source)[^>]+src=["\']([^"\']+)["\']', html):
+        u = normalize_url(src)
+        low = u.lower()
+        if any(low.endswith(e) for e in (".mp4", ".webm", ".m3u8")):
+            if u not in vids:
+                vids.append(u)
+    return vids
+
+
 def fetch_article(url, timeout=12):
-    """抓原文页面，返回 (正文文本, og:image, 全部图片列表)。失败返回 (None, None, [])"""
+    """抓原文页面，返回 (正文文本, og:image, 全部图片列表, 视频列表)。失败返回 (None, None, [], [])"""
     try:
         html = _get(url, timeout=timeout)
     except Exception:
-        return None, None, []
+        return None, None, [], []
 
     # og:image（两种属性顺序都兼容）
     og = None
@@ -415,6 +436,14 @@ def fetch_article(url, timeout=12):
         og = normalize_url(m.group(1))
 
     imgs = _extract_images(html, og)
+
+    # og:video（含 og:video / og:video:url / og:video:secure_url）
+    og_video = None
+    vm = (re.search(r'<meta[^>]+property=["\']og:video(?::secure_url|:url)?["\'][^>]+content=["\']([^"\']+)["\']', html)
+          or re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:video(?::secure_url|:url)?["\']', html))
+    if vm:
+        og_video = normalize_url(vm.group(1))
+    videos = _extract_videos(html, og_video)
 
     # 正文：抽取 <p> 文本
     paras = re.findall(r"<p[^>]*>(.*?)</p>", html, re.S)
@@ -426,7 +455,7 @@ def fetch_article(url, timeout=12):
         if len(t) >= 20:
             texts.append(t)
     body = "\n".join(texts)[:3000] if texts else None
-    return body, og, imgs
+    return body, og, imgs, videos
 
 
 def enrich_items(items, max_fetch=8):
@@ -455,13 +484,15 @@ def enrich_items(items, max_fetch=8):
         if fetched >= max_fetch:
             break
         print(f"  抓原文: {it['src']} 《{it['title'][:22]}》...")
-        body, og, imgs = fetch_article(it["url"])
+        body, og, imgs, videos = fetch_article(it["url"])
         if body:
             it["body"] = body
         if imgs:
             it["images"] = imgs
             if not it.get("image"):
                 it["image"] = imgs[0]
+        if videos:
+            it["videos"] = videos
         fetched += 1
         time.sleep(0.3)
     return items
@@ -877,12 +908,19 @@ def make_slug(raw_slug):
     return s[:60]
 
 
-def save_markdown(article, image_url, slug, source_url=""):
+def save_markdown(article, image_url, slug, source_url="", videos=None):
     out_dir = Path(CFG.get("output_dir", DEFAULT_OUTPUT_DIR))
     out_dir.mkdir(parents=True, exist_ok=True)
     date = datetime.date.today().isoformat()
 
     src_line = f'source: "{source_url}"\n' if source_url else ""
+
+    videos = videos or []
+    if videos:
+        video_lines = "\n".join(f'  - "{v}"' for v in videos)
+        video_block = f"videos:\n{video_lines}\n"
+    else:
+        video_block = ""
 
     tags = article.get("tags") or []
     if tags:
@@ -897,7 +935,7 @@ category: "{article['category']}"
 description: "{article['description']}"
 date: {date}
 image: "{image_url}"
-{src_line}{tags_block}---
+{src_line}{video_block}{tags_block}---
 
 {article['content']}
 """
@@ -981,7 +1019,8 @@ def main():
         if len(inline_imgs) > 1:
             article["content"], _ = download_inline_images(slug, article["content"], inline_imgs[1:], image_dir, referer=(chosen or {}).get("url"))
         source_url = (chosen or {}).get("url") or ""
-        path = save_markdown(article, image_url, slug, source_url)
+        videos = (chosen or {}).get("videos") or []
+        path = save_markdown(article, image_url, slug, source_url, videos=videos)
         print(f"✅ slug：{slug}")
         print(f"✅ 已保存：{path}")
         print(f"✅ 首图：{image_url}")

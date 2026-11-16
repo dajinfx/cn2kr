@@ -354,6 +354,10 @@ img { max-width: 100%; display: block; }
 .article .content blockquote { border-left: 4px solid var(--accent); padding: 8px 16px; margin: 20px 0; background: var(--soft); border-radius: 0 8px 8px 0; }
 .article-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; }
 .article-tags .tag-chip { font-size: 13px; color: var(--muted); background: var(--soft); border-radius: 999px; padding: 4px 14px; }
+.article-videos { margin: 16px 0 20px; display: flex; flex-direction: column; gap: 16px; }
+.article-videos .video-embed { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; }
+.article-videos .video-embed iframe,
+.article-videos .video-embed video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
 /* ============ 点赞 ============ */
 .article-engagement {

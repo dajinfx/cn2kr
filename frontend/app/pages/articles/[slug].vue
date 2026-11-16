@@ -6,6 +6,12 @@
         {{ post.meta?.category }} · {{ date }}
       </div>
       <img v-if="post.meta?.image" :src="post.meta.image" :alt="post.title" style="width:100%; border-radius:12px; margin: 8px 0 20px;" />
+      <div v-if="videos.length" class="article-videos">
+        <div v-for="(v, i) in videos" :key="i" class="video-embed">
+          <iframe v-if="v.kind === 'iframe'" :src="v.src" title="영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          <video v-else-if="v.kind === 'video'" :src="v.src" controls preload="none" playsinline></video>
+        </div>
+      </div>
       <div class="content">
         <ContentRenderer :value="post" />
       </div>
@@ -73,6 +79,31 @@ const tags = computed(() => {
   if (Array.isArray(t)) return t.filter(Boolean)
   if (typeof t === 'string') return t.split(',').map(s => s.trim()).filter(Boolean)
   return []
+})
+
+// 原文视频（frontmatter videos，嵌入渲染）
+function embedVideo(url) {
+  const u = String(url)
+  const low = u.toLowerCase()
+  // 直连视频文件
+  if (/\.(mp4|webm|m3u8)(\?|$)/.test(low)) {
+    return { kind: 'video', src: u }
+  }
+  // B站
+  if (low.includes('bilibili')) {
+    const bv = u.match(/bilibili\.com\/video\/(BV[0-9A-Za-z]+)/) || u.match(/[?&]bvid=(BV[0-9A-Za-z]+)/i)
+    if (bv) return { kind: 'iframe', src: `https://player.bilibili.com/player.html?bvid=${bv[1]}&autoplay=0` }
+  }
+  // YouTube
+  const yt = u.match(/youtube\.com\/watch\?v=([\w-]+)/) || u.match(/youtu\.be\/([\w-]+)/) || u.match(/youtube\.com\/embed\/([\w-]+)/)
+  if (yt) return { kind: 'iframe', src: `https://www.youtube.com/embed/${yt[1]}` }
+  // 其他平台 iframe（腾讯/优酷/爱奇艺/抖音等，通常已是可嵌入 URL）
+  return { kind: 'iframe', src: u }
+}
+const videos = computed(() => {
+  const v = post.value?.meta?.videos
+  if (!Array.isArray(v)) return []
+  return v.filter(Boolean).map(embedVideo)
 })
 
 // 相关文章（同分类，排除当前，最多 6 篇）
