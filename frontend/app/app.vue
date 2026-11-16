@@ -46,6 +46,8 @@
             <h4>사이트</h4>
             <NuxtLink to="/about">소개</NuxtLink>
             <NuxtLink to="/tools">실용 도구</NuxtLink>
+            <a href="/rss.xml" target="_blank" rel="noopener">RSS</a>
+            <a href="/sitemap.xml" target="_blank" rel="noopener">사이트맵</a>
           </div>
         </div>
         <div class="footer-bottom">© {{ new Date().getFullYear() }} cn2kr — All rights reserved</div>

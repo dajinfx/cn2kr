@@ -20,6 +20,13 @@ export default defineNuxtConfig({
           href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css',
           crossorigin: '',
         },
+        // RSS 订阅源（SEO / 搜索引擎发现用）
+        {
+          rel: 'alternate',
+          type: 'application/rss+xml',
+          title: 'cn2kr RSS',
+          href: 'https://cn2kr.net/rss.xml',
+        },
       ],
     },
   },
@@ -40,6 +47,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
+      routes: ['/rss.xml'],
     },
   },
 })
