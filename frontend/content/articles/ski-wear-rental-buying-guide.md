@@ -6,7 +6,12 @@ date: 2026-11-16
 image: "/images/ski-wear-rental-buying-guide.png"
 source: "https://post.smzdm.com/p/a4q462pk/"
 tags:
-  - 중국 직구
+  - 디카트론 스키500
+  - 에스엔비500
+  - 스키복 방수 15000
+  - 스키복 렌탈 vs 구매
+  - 알타이 리조트 초보자
+  - 스키 헬멧 고글 추천
 
 ---
 

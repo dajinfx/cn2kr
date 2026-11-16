@@ -5,7 +5,12 @@ description: "2K 275Hz 모니터부터 스마트태블릿까지, 중국 직구 �
 date: 2026-11-06
 image: "/images/2026-china-digital-appliances-top-4.jpg?v=20261115"
 tags:
-  - 중국 직구
+  - MSI MAG 276QE27
+  - 샤오미 패드 6 직구
+  - 레노버 샤오신 패드 프로
+  - 타오바오 모니터 직구
+  - 알리익스프레스 초이스
+  - 1688 직구
 
 ---
 

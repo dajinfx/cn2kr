@@ -5,7 +5,12 @@ description: "S16 우승 후 리닝 유니폼 품귀, 중국 굿즈 시장의 �
 date: 2026-11-15
 image: "/images/china-esports-blg-jersey-resell.jpg?v=20261115"
 tags:
-  - 중국사회
+  - BLG 리닝 유니폼 리셀
+  - BLG 우승 유니폼 1400위안
+  - 셴위 e스포츠 굿즈
+  - 나이트 FMVP 스킨
+  - 비리비리 대회원 무료
+  - BLG 우승 굿즈
 
 ---
 

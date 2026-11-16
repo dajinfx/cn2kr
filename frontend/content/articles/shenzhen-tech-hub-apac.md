@@ -6,8 +6,12 @@ date: 2026-11-16
 image: "/images/shenzhen-tech-hub-apac.jpg"
 source: "https://www.toutiao.com/article/7708414856373797391"
 tags:
-  - 선전
-  - 중국 테크
+  - 선전 화웨이 본사
+  - 선전 DJI 드론 투어
+  - BYD 전기차 직구
+  - 딥시크 AI 한국 사용
+  - 선전 스마트폰 직구 통관
+  - 중국 드론 부품 관세
 
 ---
 

@@ -6,8 +6,11 @@ date: 2026-11-16
 image: "/images/huawei-seris-new-m8-ev.jpg"
 source: "https://www.ifanr.com/1689432?utm_source=rss&utm_medium=rss&utm_campaign="
 tags:
-  - 화웨이
-  - 중국 테크
+  - 화웨이 싸이리스 신형 M8
+  - 원제 M8 가격
+  - 화웨이 자율주행 건쿤 ADS 5
+  - 싸이리스 슈퍼팩토리
+  - 원제 M8 전기차 출시
 
 ---
 
