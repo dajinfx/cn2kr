@@ -369,6 +369,13 @@ _BAD_IMG = (
     "default_", "qrcode", "wechat", "share", "loading", "placeholder",
 )
 _GOOD_IMG_EXT = (".jpg", ".jpeg", ".png", ".webp")
+# 缩略图尺寸后缀（smzdm 等源的推荐位小图：_a320/_s200/_fo710），不算正文配图
+_THUMB_RE = re.compile(r"_(?:a|s|fo)\d+\.(?:jpg|jpeg|png|webp)$", re.I)
+# 非正文图域名/路径（装饰图、认证图、站内运营图等），不算正文配图
+_NON_CONTENT_RE = re.compile(
+    r"://(?:static\.|res\.|eimg\.|qneimg\.|qny\.|tmpf\.|trust\.)"
+    r"|/(?:certificate|credit|internal)/"
+    r"|xiewenzhang|select-selected|chevron", re.I)
 
 
 def _extract_images(html, og):
@@ -384,6 +391,10 @@ def _extract_images(html, og):
         if not low.endswith(_GOOD_IMG_EXT):
             continue
         if any(b in low for b in _BAD_IMG):
+            continue
+        if _THUMB_RE.search(low):
+            continue
+        if _NON_CONTENT_RE.search(low):
             continue
         imgs.append(u)
     return imgs
