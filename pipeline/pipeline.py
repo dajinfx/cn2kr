@@ -66,7 +66,7 @@ def load_config():
     cfg.setdefault("model", "deepseek-chat")
     cfg.setdefault("output_dir", DEFAULT_OUTPUT_DIR)
     cfg.setdefault("image_dir", DEFAULT_IMAGE_DIR)
-    cfg.setdefault("sources", {"baidu_hot": True, "toutiao_hot": True, "smzdm_rss": True, "jianshu": True, "sspai": True})
+    cfg.setdefault("sources", {"baidu_hot": True, "toutiao_hot": True, "smzdm_rss": True, "jianshu": True, "sspai": True, "ifanr": True})
     cfg.setdefault("max_fetch", 8)  # 最多抓几篇原文正文
 
     if not cfg.get("deepseek_api_key"):
@@ -265,6 +265,44 @@ def fetch_sspai(limit=4):
     return out
 
 
+def fetch_ifanr(limit=8):
+    """爱范儿 RSS（中国科技媒体）：正文和配图都在 RSS 里，无需抓原文页，不触发反爬"""
+    raw = _get("https://www.ifanr.com/feed")
+    items = re.findall(r"<item>(.*?)</item>", raw, re.S)
+    out = []
+    for it in items[:limit]:
+        m = re.search(r"<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>", it, re.S)
+        link = re.search(r"<link>(.*?)</link>", it, re.S)
+        if not m:
+            continue
+        title = _html.unescape(m.group(1)).strip()
+        # 正文和配图都从 content:encoded（或 description）里抽
+        ce = re.search(r"<content:encoded>(.*?)</content:encoded>", it, re.S)
+        if not ce:
+            ce = re.search(r"<description>(.*?)</description>", it, re.S)
+        html = ce.group(1) if ce else ""
+        imgs = _extract_images(html, None)
+        # 抽 <p> 文本做正文
+        paras = re.findall(r"<p[^>]*>(.*?)</p>", html, re.S)
+        texts = []
+        for p in paras:
+            t = re.sub(r"<[^>]+>", " ", p)
+            t = _html.unescape(t)
+            t = re.sub(r"\s+", " ", t).strip()
+            if len(t) >= 20:
+                texts.append(t)
+        body = "\n".join(texts)[:3000] if texts else None
+        out.append({
+            "title": title,
+            "url": normalize_url(link.group(1).strip() if link else ""),
+            "image": imgs[0] if imgs else None,
+            "images": imgs,
+            "body": body,
+            "src": "爱范儿",
+        })
+    return out
+
+
 def collect_items():
     items = []
     src = CFG.get("sources", {})
@@ -298,6 +336,12 @@ def collect_items():
             print("✅ 少数派", end="  ")
         except Exception as e:
             print(f"⚠️ 少数派失败({e})", end="  ")
+    if src.get("ifanr", True):
+        try:
+            items += fetch_ifanr()
+            print("✅ 爱范儿", end="  ")
+        except Exception as e:
+            print(f"⚠️ 爱范儿失败({e})", end="  ")
     print()
     return items
 
@@ -378,8 +422,8 @@ def enrich_items(items, max_fetch=8):
     注意：今日头条正文是 JS 渲染抓不到，但它的头图(Image.url)已经直接给到了 item，
     所以这里跳过头条的正文抓取，其余源(smzdm/sspai/jianshu)抓正文 + og:image。
     """
-    # 需要抓正文的来源：有 url 且非今日头条（头条已直接有头图）
-    to_fetch = [it for it in items if it.get("url") and it.get("src") != "今日头条"]
+    # 需要抓正文的来源：有 url 且非「头条(JS渲染)/爱范儿(图已在RSS里)」
+    to_fetch = [it for it in items if it.get("url") and it.get("src") not in ("今日头条", "爱范儿")]
     groups = {}
     for it in to_fetch:
         groups.setdefault(it["src"], []).append(it)
@@ -745,30 +789,57 @@ def resolve_cover(chosen, slug, category, image_dir):
     return generate_svg(category, slug, image_dir)
 
 
-def download_inline_images(slug, content, inline_images, image_dir, referer=None):
-    """用原文剩余图片(除头图外)替换正文里的 [이미지: ...] 标记，返回 (新正文, 成功数)。
+def download_inline_images(slug, content, inline_images, image_dir, referer=None, max_inline=6):
+    """把原文插图(除头图外)放进正文，返回 (新正文, 张数)。
 
-    原文图用完但还有标记时，剩余标记留给 fetch_images.py 图库兜底。
+    1) 先用原文图替换正文里的 [이미지: ...] 标记（按顺序）
+    2) 多余的原文图均匀插到段落之间（最多共 max_inline 张插图）
     """
     if not inline_images:
         return content, 0
-    markers = re.findall(r"\[이미지:\s*([^\]]+)\]", content)
-    if not markers:
+
+    # 下载最多 max_inline 张插图
+    rels = []
+    for i, u in enumerate(inline_images[:max_inline]):
+        rel = download_image(u, str(Path(image_dir) / f"{slug}-{i + 1}"), referer=referer)
+        if rel:
+            rels.append(rel)
+            print(f"  ✅ 原文插图{i + 1} -> {rel}")
+    if not rels:
         return content, 0
+
+    # 1) 用前几张替换 [이미지:] 标记
     pattern = re.compile(r"\[이미지:\s*[^\]]+\]")
+    markers = re.findall(r"\[이미지:\s*([^\]]+)\]", content)
     new_content = content
-    ok = 0
+    used = 0
     for i, marker in enumerate(markers):
-        if i >= len(inline_images):
+        if i >= len(rels):
             break
         parts = [p.strip() for p in marker.split("|")]
         alt = parts[1] if len(parts) > 1 and parts[1] else "이미지"
-        rel = download_image(inline_images[i], str(Path(image_dir) / f"{slug}-{i + 1}"), referer=referer)
-        if rel:
-            new_content = pattern.sub(f"![{alt}]({rel})", new_content, count=1)
-            print(f"  ✅ 原文插图{i + 1} -> {rel}")
-            ok += 1
-    return new_content, ok
+        new_content = pattern.sub(f"![{alt}]({rels[i]})", new_content, count=1)
+        used += 1
+
+    # 2) 剩余图片均匀插到段落之间
+    extra = rels[used:]
+    if extra:
+        blocks = [b for b in new_content.split("\n\n") if b.strip()]
+        if len(blocks) >= 2:
+            gap = max(1, len(blocks) // (len(extra) + 1))
+            out = []
+            idx = 0
+            for i, b in enumerate(blocks):
+                out.append(b)
+                if idx < len(extra) and (i + 1) % gap == 0 and (i + 1) < len(blocks):
+                    out.append(f"![이미지 {used + idx + 1}]({extra[idx]})")
+                    idx += 1
+            while idx < len(extra):
+                out.append(f"![이미지 {used + idx + 1}]({extra[idx]})")
+                idx += 1
+            new_content = "\n\n".join(out)
+
+    return new_content, len(rels)
 
 
 # ---------------------------------------------------------------- 5. 存 Markdown
