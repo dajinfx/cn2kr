@@ -4,7 +4,7 @@ title: "중국 여행 가기 전 결제·통신 세팅, 이 순서대로만 하�
 category: "중국 여행"
 description: "알리페이·위챗페이·유심 준비 실전 순서"
 date: 2026-11-09
-image: "/images/china-trip-payment-sim-setup-2026.jpg?v=20261115"
+image: "/images/china-trip-payment-sim-setup-2026.jpg"
 tags:
   - 알리페이 한국 카드 등록
   - 위챗페이 여권 인증
