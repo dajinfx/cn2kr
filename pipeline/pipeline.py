@@ -345,6 +345,13 @@ def collect_items():
         except Exception as e:
             print(f"⚠️ 爱范儿失败({e})", end="  ")
     print()
+    # URL 去重：过滤掉已经写过的原文（同一 URL 永远只写一次）
+    fetched = load_fetched_urls()
+    if fetched:
+        before = len(items)
+        items = [it for it in items if not (it.get("url") and _url_key(it["url"]) in fetched)]
+        if len(items) < before:
+            print(f"  去重：已过滤 {before - len(items)} 条已抓取过的原文")
     return items
 
 
@@ -611,6 +618,45 @@ def koreanize_title_desc(title, desc):
 
 
 # ---------------------------------------------------------------- 去重
+FETCHED_URLS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fetched_urls.txt")
+
+
+def _url_key(u):
+    """URL 去重 key：去 query/fragment/尾斜杠，统一小写，只留 netloc+path"""
+    if not u:
+        return ""
+    u = normalize_url(u)
+    u = u.split("?", 1)[0].split("#", 1)[0]
+    u = re.sub(r"/+$", "", u)
+    return u.strip().lower()
+
+
+def load_fetched_urls():
+    """读取已抓取原文 URL 清单（去重 key 集合）"""
+    keys = set()
+    try:
+        with open(FETCHED_URLS_FILE, encoding="utf-8") as f:
+            for line in f:
+                k = _url_key(line)
+                if k:
+                    keys.add(k)
+    except FileNotFoundError:
+        pass
+    return keys
+
+
+def record_fetched_url(url):
+    """把一篇已写文章的原文 URL 追加进清单"""
+    k = _url_key(url)
+    if not k:
+        return
+    try:
+        with open(FETCHED_URLS_FILE, "a", encoding="utf-8") as f:
+            f.write(k + "\n")
+    except Exception as e:
+        print(f"⚠️ 记录已抓取 URL 失败: {e}")
+
+
 TOPIC_KEYWORDS = [
     "드론", "로봇", "스마트폰", "테무", "알리", "타오바오", "1688",
     "청두", "충칭", "고속철", "딥시크", "반도체", "전기차", "테슬라",
@@ -965,6 +1011,8 @@ image: "{image_url}"
 """
     path = out_dir / f"{slug}.md"
     path.write_text(md, encoding="utf-8")
+    if source_url:
+        record_fetched_url(source_url)
     return path
 
 
