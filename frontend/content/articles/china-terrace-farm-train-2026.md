@@ -6,7 +6,7 @@ date: 2026-11-18
 image: "/images/china-terrace-farm-train-2026.jpg"
 source: "https://tidenews.com.cn/news.html?id=2942152"
 videos:
-  - "https://www.youtube.com/shorts/yLvCLh6S318"
+  - "https://www.youtube.com/shorts/iTvucQ2odlI"
 tags:
   - 중국 농촌
   - 신농민
@@ -31,7 +31,6 @@ tags:
 
 ## 1km당 12만 위안, 그래도 짓겠다고 한 이유
 
-![산지 닭 농장](/images/china-terrace-farm-train-2026-2.jpg)
 
 차량에 오르면 먹이 주기 한 번에 십여 분이면 충분합니다. 동취안리 씨는 "지금 깐 2km 궤도가 300여 묘(약 20만㎡)를 커버하고, 최대 45도 경사를 오를 수 있다"고 설명합니다. 위아래에서 기른 잡곡을 실어 나르고, 닭 배설물은 다시 농작물 거름으로 씁니다. 먹이 주기는 사실상 한 사람이면 해결됩니다.
 
@@ -49,4 +48,4 @@ tags:
 
 올해는 계단식 논에 유채꽃을 심어 이듬해 개화를 기다리고 있습니다. 그는 "요즘은 농업·문화·관광을 결합해야 한다는데 말로만 해서는 안 되고 하나씩 시도해야 한다"며 "타이순은 산과 물, 공기가 좋고 요즘은 식품 안전에 대한 관심도 커서 '향촌진흥호'를 타고 농장이 더 과학화될 것"이라고 말했습니다.
 
-<div style="position:relative;padding-bottom:56.25%;height:0;margin:24px 0;"><iframe src="https://www.youtube.com/embed/iTvucQ2odlI" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px;" title="영상" allowfullscreen loading="lazy"></iframe></div>
+<div style="position:relative;padding-bottom:56.25%;height:0;margin:24px 0;"><iframe src="https://www.youtube.com/embed/yLvCLh6S318" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px;" title="영상" allowfullscreen loading="lazy"></iframe></div>
