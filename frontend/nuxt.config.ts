@@ -20,6 +20,17 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      script: [
+        // Google Tag Manager (GTM-MSKT2CT3)
+        {
+          src: 'https://www.googletagmanager.com/gtm.js?id=GTM-MSKT2CT3',
+          async: true,
+        },
+        {
+          innerHTML:
+            'window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date());',
+        },
+      ],
       link: [
         // Pretendard 字体（韩国现代常用字体，토스/네이버 等在用）
         {
