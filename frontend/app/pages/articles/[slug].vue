@@ -97,6 +97,9 @@ function embedVideo(url) {
   // YouTube（含 shorts）
   const yt = u.match(/youtube\.com\/watch\?v=([\w-]+)/) || u.match(/youtu\.be\/([\w-]+)/) || u.match(/youtube\.com\/shorts\/([\w-]+)/) || u.match(/youtube\.com\/embed\/([\w-]+)/)
   if (yt) return { kind: 'iframe', src: `https://www.youtube.com/embed/${yt[1]}` }
+  // X / Twitter 视频
+  const tw = u.match(/(?:x\.com|twitter\.com)\/\w+\/status\/(\d+)/)
+  if (tw) return { kind: 'iframe', src: `https://platform.twitter.com/embed/Tweet.html?id=${tw[1]}` }
   // 其他平台 iframe（腾讯/优酷/爱奇艺/抖音等，通常已是可嵌入 URL）
   return { kind: 'iframe', src: u }
 }

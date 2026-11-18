@@ -7,6 +7,7 @@ image: "/images/china-terrace-farm-train-2026.jpg"
 source: "https://tidenews.com.cn/news.html?id=2942152"
 videos:
   - "https://www.youtube.com/shorts/yLvCLh6S318"
+  - "https://x.com/Blind___Gamer/status/1931924212588953835/video/1"
 tags:
   - 중국 농촌
   - 신농민
