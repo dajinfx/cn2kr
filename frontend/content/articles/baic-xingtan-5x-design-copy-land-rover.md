@@ -1,6 +1,6 @@
 ---
 title: "12만 위안짜리 '가난한 자의 수호자', 중국차 해외 이미지를 흔든 이유"
-category: "중국 직구"
+category: "중국 테크"
 description: "북중 신탄 5X 디자인 표절 논란과 중국차의 현주소"
 date: 2026-11-18
 image: "/images/baic-xingtan-5x-design-copy-land-rover.jpg"
