@@ -74,7 +74,11 @@ const isUat = computed(() => {
 // 全局 SEO 基础：语言 + 标题模板 + 站点级结构化数据
 useHead({
   htmlAttrs: { lang: 'ko' },
-  titleTemplate: (title) => (title ? `${title} — cn2kr` : 'cn2kr — 중국 테크·여행·직구'),
+  titleTemplate: (title) => {
+    if (!title) return 'cn2kr — 중국 테크·여행·직구'
+    if (title.startsWith('cn2kr — ')) return title // 首页 title 已含 cn2kr，不再重复追加
+    return `${title} — cn2kr`
+  },
   meta: [
     {
       name: 'description',

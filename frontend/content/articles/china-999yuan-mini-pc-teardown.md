@@ -3,7 +3,7 @@ title: "999위안짜리 국산 미니PC 분해 메인보드, i5-12450H에 GTX106
 category: "중국 테크"
 description: "중고시장에 풀린 999위안 국산 미니PC 분해 메인보드의 구성과 확장성, 실사용 가치를 따져봅니다."
 date: 2026-11-16
-image: "/images/china-mini-pc-deepseek-search-cost.webp"
+image: "/images/china-999yuan-mini-pc-teardown.webp"
 source: "https://post.smzdm.com/p/a264q29d/"
 tags:
   - 셴위 미니PC 999위안
@@ -18,28 +18,28 @@ tags:
 
 이번에 셴위에 올라온 물건은 소형 본체에서 분해한 메인보드로, 케이스와 일체형이며 이중 방열 구조를 갖췄습니다. 구성은 코어 i5-12450H에 GTX1060 4G 외장 그래픽을 조합한 방식으로, 전체적인 설계는 노트북에 가깝습니다. 현재 메인보드만 999위안에 올라와 있으며, 화면에 줄이 생기는 문제로 분해해 판매한다는 설명이 붙어 있습니다.
 
-![케이스와 결합된 메인보드 전체 외관](/images/china-mini-pc-deepseek-search-cost-1.webp)
+![케이스와 결합된 메인보드 전체 외관](/images/china-999yuan-mini-pc-teardown-1.webp)
 
 공개된 실물 사진을 보면 이 소형 본체는 OPS 방식 소형 PC와 매우 유사한 구성입니다. 외장 그래픽을 갖춘 설계로 프로세서와 그래픽 코어가 나란히 자리하고, 안정적인 구동을 위해 방열 팬 두 개를 사용합니다. 전통적인 데스크톱 본체에 비하면 상당히 작은 크기로, 산업용 PC나 단말 장비로 활용해도 무리가 없는 수준입니다.
 
-![프로세서와 그래픽 코어를 덮는 듀얼 방열 팬](/images/china-mini-pc-deepseek-search-cost-2.webp)
+![프로세서와 그래픽 코어를 덮는 듀얼 방열 팬](/images/china-999yuan-mini-pc-teardown-2.webp)
 
 메인보드의 인터페이스는 실용성 위주로 구성됐습니다. 전원 단자, HDMI, USB, Type-C, 기가비트 랜포트, 오디오 단자 2개가 온보드로 제공됩니다.
 
-![후면 인터페이스부의 단자 배열](/images/china-mini-pc-deepseek-search-cost-3.webp)
+![후면 인터페이스부의 단자 배열](/images/china-999yuan-mini-pc-teardown-3.webp)
 
 또한 무선 랜카드를 지원해 WIFI와 블루투스 연결이 가능합니다.
 
-![무선 랜카드 장착 슬롯](/images/china-mini-pc-deepseek-search-cost-4.webp)
+![무선 랜카드 장착 슬롯](/images/china-999yuan-mini-pc-teardown-4.webp)
 
 구성 사양을 보면 코어 i5-12450H와 GTX1060 4G 외장 그래픽의 조합입니다. 프로세서는 8코어 12스레드로, 고부하 작업을 담당하는 4개의 P코어와 백그라운드 멀티태스킹을 처리하는 4개의 E코어로 나뉩니다. 기본 클럭 2.0GHz, 최대 부스트 클럭 4.4GHz, 기본 전력 45W, 최대 부스트 전력 95W입니다. 그래픽의 경우 1060 4G는 데스크톱용으로는 존재하지 않는 용량 구성이라, 모바일용 모델일 가능성이 높으며 분리할 수 없습니다.
 
-![GTX1060 4G 그래픽 코어와 방열판](/images/china-mini-pc-deepseek-search-cost-5.webp)
+![GTX1060 4G 그래픽 코어와 방열판](/images/china-999yuan-mini-pc-teardown-5.webp)
 
 확장성은 어느 정도 갖췄지만 넉넉한 편은 아닙니다. 온보드로 노트북 규격 DDR4 메모리 슬롯 두 개를 제공해 듀얼 채널을 지원합니다. 저장장치는 M.2 SSD를 지원하고, 전원 단자가 함께 있는 SATA 포트 하나를 사용할 수 있습니다. 이 밖에 M.2 무선 랜카드 슬롯이 저장장치용 M.2 슬롯과 겹쳐 쌓인 형태로 설계돼 역시 사용할 수 있습니다.
 
-![DDR4 메모리 슬롯과 M.2 저장장치 슬롯](/images/china-mini-pc-deepseek-search-cost-6.webp)
+![DDR4 메모리 슬롯과 M.2 저장장치 슬롯](/images/china-999yuan-mini-pc-teardown-6.webp)
 
-![SATA 포트와 M.2 무선 랜카드 슬롯 적층 구조](/images/china-mini-pc-deepseek-search-cost-7.webp)
+![SATA 포트와 M.2 무선 랜카드 슬롯 적층 구조](/images/china-999yuan-mini-pc-teardown-7.webp)
 
 외장 그래픽이 붙은 소형 본체를 찾는 사용자는 적지 않지만, 그래픽 자체가 웃돈이 붙는 부품인 만큼 가격대는 확실히 높아집니다. 반면 지금의 내장 그래픽 구성만으로도 사무용이나 온라인 게임 정도는 대부분 충분히 소화할 수 있는 수준입니다.
