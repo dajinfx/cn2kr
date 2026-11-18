@@ -645,6 +645,30 @@ def topic_overlap(title, existing_titles):
     return False
 
 
+def is_topic_duplicate(title, description, existing_titles):
+    """用 DeepSeek 语义判断新文章是否与已有文章主题重复（比关键词匹配更准）。
+
+    标题措辞不同、但讲的是同一件事/同一话题的，也算重复。
+    """
+    if not existing_titles:
+        return False
+    existing_list = "\n".join(f"- {t}" for t in existing_titles[:50])
+    prompt = (
+        "你是中文内容选题去重助手。判断「新文章」是否和「已有文章」里的某一篇是同一主题"
+        "（讲的是同一件事/同一个话题，即使标题措辞不同、来源不同，也算重复）。\n\n"
+        f"新文章标题：{title}\n"
+        f"新文章摘要：{description}\n\n"
+        "已有文章标题列表：\n" + existing_list + "\n\n"
+        "只回答两个字：重复 或 不重复"
+    )
+    try:
+        raw = call_deepseek(prompt)
+        return "重复" in raw
+    except Exception as e:
+        print(f"⚠️ 主题判重调用失败({e})，按不重复处理")
+        return False
+
+
 # ---------------------------------------------------------------- 3. 生成
 def build_candidate_block(items):
     """把候选原文列表拼成 prompt 片段（带链接，供 DeepSeek 原样复制来源）"""
@@ -985,15 +1009,19 @@ def main():
         items.sort(key=_rank)
         items = items[:20]
 
-        # 去重检查：主题重复则换角度重试（最多 5 次）
+        # 去重检查：URL 去重已在 collect_items 过滤；这里再主题判重（关键词 + DeepSeek 语义），重复则换角度重试（最多 5 次）
         existing = load_existing_titles()
         article = None
+        is_dup = True
         for attempt in range(5):
             article = generate(items, category)
-            if not topic_overlap(article["title"], existing):
+            is_dup = topic_overlap(article["title"], existing) or is_topic_duplicate(
+                article["title"], article.get("description", ""), existing
+            )
+            if not is_dup:
                 break
             print(f"⚠️ 主题重复，重试 ({attempt + 1}/5)")
-        if article is None or topic_overlap(article["title"], existing):
+        if article is None or is_dup:
             print("⚠️ 连续 5 次都重复，本篇跳过")
             continue
         # 韩文化兜底：残留中文字符 → 二次转韩文（内容/结构不动，只换中文词）
