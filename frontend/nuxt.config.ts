@@ -20,6 +20,17 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      script: [
+        // Google Analytics 4 (GA4) — Measurement ID: G-8Q2FW78VM0
+        {
+          src: 'https://www.googletagmanager.com/gtag/js?id=G-8Q2FW78VM0',
+          async: true,
+        },
+        {
+          innerHTML:
+            'window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "G-8Q2FW78VM0");',
+        },
+      ],
       link: [
         // Pretendard 字体（韩国现代常用字体，토스/네이버 等在用）
         {
