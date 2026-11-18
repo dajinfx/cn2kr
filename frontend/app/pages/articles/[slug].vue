@@ -94,8 +94,8 @@ function embedVideo(url) {
     const bv = u.match(/bilibili\.com\/video\/(BV[0-9A-Za-z]+)/) || u.match(/[?&]bvid=(BV[0-9A-Za-z]+)/i)
     if (bv) return { kind: 'iframe', src: `https://player.bilibili.com/player.html?bvid=${bv[1]}&autoplay=0` }
   }
-  // YouTube
-  const yt = u.match(/youtube\.com\/watch\?v=([\w-]+)/) || u.match(/youtu\.be\/([\w-]+)/) || u.match(/youtube\.com\/embed\/([\w-]+)/)
+  // YouTube（含 shorts）
+  const yt = u.match(/youtube\.com\/watch\?v=([\w-]+)/) || u.match(/youtu\.be\/([\w-]+)/) || u.match(/youtube\.com\/shorts\/([\w-]+)/) || u.match(/youtube\.com\/embed\/([\w-]+)/)
   if (yt) return { kind: 'iframe', src: `https://www.youtube.com/embed/${yt[1]}` }
   // 其他平台 iframe（腾讯/优酷/爱奇艺/抖音等，通常已是可嵌入 URL）
   return { kind: 'iframe', src: u }

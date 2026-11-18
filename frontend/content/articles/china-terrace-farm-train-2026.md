@@ -5,6 +5,8 @@ description: "저장성 타이순현 동취안리의 과학농업 현장"
 date: 2026-11-18
 image: "/images/china-terrace-farm-train-2026.jpg"
 source: "https://tidenews.com.cn/news.html?id=2942152"
+videos:
+  - "https://www.youtube.com/shorts/yLvCLh6S318"
 tags:
   - 중국 농촌
   - 신농민
