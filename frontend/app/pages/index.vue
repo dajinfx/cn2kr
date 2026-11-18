@@ -10,7 +10,10 @@
             <li v-for="(p, i) in popularPosts" :key="p.path">
               <NuxtLink :to="p.path">
                 <span class="widget-num">{{ i + 1 }}</span>
-                <span class="widget-text">{{ p.title }}</span>
+                <span class="widget-body">
+                  <span class="widget-text">{{ p.title }}</span>
+                  <span class="widget-date">{{ formatDate(p.meta?.date) }}</span>
+                </span>
               </NuxtLink>
             </li>
           </ol>
