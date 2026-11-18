@@ -21,14 +21,14 @@ export default defineNuxtConfig({
   app: {
     head: {
       script: [
-        // Google Tag Manager (GTM-MSKT2CT3)
+        // Google Analytics 4 (GA4) — Measurement ID: G-8Q2FW78VM0
         {
-          src: 'https://www.googletagmanager.com/gtm.js?id=GTM-MSKT2CT3',
+          src: 'https://www.googletagmanager.com/gtag/js?id=G-8Q2FW78VM0',
           async: true,
         },
         {
           innerHTML:
-            'window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date());',
+            'window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "G-8Q2FW78VM0");',
         },
       ],
       link: [
