@@ -7,7 +7,6 @@ image: "/images/china-terrace-farm-train-2026.jpg"
 source: "https://tidenews.com.cn/news.html?id=2942152"
 videos:
   - "https://www.youtube.com/shorts/yLvCLh6S318"
-  - "https://x.com/Blind___Gamer/status/1931924212588953835/video/1"
 tags:
   - 중국 농촌
   - 신농민
@@ -46,8 +45,8 @@ tags:
 
 농장에는 태양광과 감응등, 폐쇄회로(CC)TV 같은 장비도 갖췄습니다. 그가 기르는 오흑계(五黑鷄)의 계란은 영양가가 높다고 알려졌는데, 방송 시청자들이 '하늘 계란'이라는 새 이름을 붙여줬습니다. "1년에 절반은 구름바다가 펼쳐져 닭이 구름 속에 있는 것 같다"는 이유에서입니다. 닭장도 '작은 별장'처럼 지어 원하는 둥지에 알아서 들어가 알을 낳게 했고, 음악도 틀어줍니다.
 
-![산지 닭 농장](/images/china-terrace-farm-train-2026-3.jpg)
-
 부부는 하루에 최소 세 번 계란을 모으고, 전자상거래 플랫폼을 통해 매일 약 3000개를 판매합니다. 주문은 항저우와 원저우, 상하이, 광저우 등 전국에서 들어옵니다. 이 밖에 베이비 호박과 고산 고추, 생강, 꿀고구마 등을 재배해 품목을 넓혔습니다.
 
 올해는 계단식 논에 유채꽃을 심어 이듬해 개화를 기다리고 있습니다. 그는 "요즘은 농업·문화·관광을 결합해야 한다는데 말로만 해서는 안 되고 하나씩 시도해야 한다"며 "타이순은 산과 물, 공기가 좋고 요즘은 식품 안전에 대한 관심도 커서 '향촌진흥호'를 타고 농장이 더 과학화될 것"이라고 말했습니다.
+
+<div style="position:relative;padding-bottom:56.25%;height:0;margin:24px 0;"><iframe src="https://www.youtube.com/embed/iTvucQ2odlI" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px;" title="영상" allowfullscreen loading="lazy"></iframe></div>
