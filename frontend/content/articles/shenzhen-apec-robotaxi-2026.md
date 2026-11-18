@@ -5,6 +5,8 @@ description: "APEC 개최 앞둔 선전, 로보택시 타보니 24분 12.7위안
 date: 2026-11-18
 image: "/images/shenzhen-apec-robotaxi-2026.jpg"
 source: "https://news.qq.com/rain/a/20261116A0AGO300"
+videos:
+  - "https://www.youtube.com/watch?v=XQAwt6kmTHI"
 tags:
   - 선전 로보택시
   - 샤오마즈싱 무인택시
