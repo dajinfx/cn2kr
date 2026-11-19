@@ -2,6 +2,7 @@
 title: "중국 외교 의전 차량이 전부 자국산인 이유"
 category: "중국사회"
 description: "외교 의전차량의 자국산 전환 배경과 의미"
+excerpt: "중국 외교 현장에서 수행 차량으로 쓰이는 차량이 사실상 전부 자국 브랜드로 바뀌었습니다. 외교 의전은 국가 이미지를 그대로 드러내는 무대인 만큼, 차량 선택은 단순한 물류 문제가 아니라 상징적인 메시지로 읽힙니다. 과거 독일·일본 브랜드가 주를..."
 date: 2026-11-19
 image: "/images/china-diplomacy-domestic-vehicles.jpg"
 source: "https://www.toutiao.com/trending/7709694659287695899/?category_name=topic_innerflow&event_type=hot_board&log_pb=%7B%22category_name%22%3A%22topic_innerflow%22%2C%22cluster_type%22%3A%2215%22%2C%22enter_from%22%3A%22click_category%22%2C%22entrance_hotspot%22%3A%22outside%22%2C%22event_type%22%3A%22hot_board%22%2C%22hot_board_cluster_id%22%3A%227709694659287695899%22%2C%22hot_board_impr_id%22%3A%2220261119153510A8532DE4AE2C99590B59%22%2C%22jump_page%22%3A%22hot_board_page%22%2C%22location%22%3A%22news_hot_card%22%2C%22page_location%22%3A%22hot_board_page%22%2C%22source%22%3A%22trending_tab%22%2C%22style_id%22%3A%2240132%22%2C%22title%22%3A%22%E4%B8%AD%E5%9B%BD%E5%A4%96%E4%BA%A4%E8%B7%91%E8%85%BF%E5%A4%A9%E5%9B%A2%E5%85%A8%E6%98%AF%E4%B8%AD%E5%9B%BD%E9%80%A0%22%7D&rank=&style_id=40132&topic_id=7709694659287695899"

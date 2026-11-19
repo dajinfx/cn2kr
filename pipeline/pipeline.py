@@ -986,6 +986,17 @@ def save_markdown(article, image_url, slug, source_url="", videos=None):
     out_dir.mkdir(parents=True, exist_ok=True)
     date = datetime.date.today().isoformat()
 
+    # excerpt：正文前 140 字（去掉 markdown 语法），用于首页卡片空白处填内容
+    ex = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", article["content"])
+    ex = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", ex)
+    ex = re.sub(r"^#{1,6}\s*", "", ex, flags=re.M)
+    ex = re.sub(r"\*\*([^*]*)\*\*", r"\1", ex)
+    ex = re.sub(r"[*_`~]", "", ex)
+    ex = re.sub(r"\s+", " ", ex).strip()
+    if len(ex) > 140:
+        ex = ex[:140].rsplit(" ", 1)[0] + "..."
+    excerpt = ex.replace('"', '\\"')
+
     src_line = f'source: "{source_url}"\n' if source_url else ""
 
     videos = videos or []
@@ -1006,6 +1017,7 @@ def save_markdown(article, image_url, slug, source_url="", videos=None):
 title: "{article['title']}"
 category: "{article['category']}"
 description: "{article['description']}"
+excerpt: "{excerpt}"
 date: {date}
 image: "{image_url}"
 {src_line}{video_block}{tags_block}---

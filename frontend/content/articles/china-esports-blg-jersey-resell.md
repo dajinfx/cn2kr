@@ -2,6 +2,7 @@
 title: "BLG 우승에 1494위안 리셀…중국 e스포츠 굿즈가 '금값' 된 이유"
 category: "중국 직구"
 description: "S16 우승 후 리닝 유니폼 품귀, 중국 굿즈 시장의 구조를 뜯어봅니다"
+excerpt: "중국 e스포츠 팀 BLG가 리그 오브 레전드 월드 챔피언십(S16)에서 창단 첫 우승을 차지했습니다. 결승 상대는 GEN이었고 스코어는 3대 1. 미드 라이너 나이트(Knight)가 FMVP에 올랐습니다. 그런데 중국 현지에서 더 뜨거운 숫자는 따로..."
 date: 2026-11-15
 image: "/images/china-esports-blg-jersey-resell.jpg"
 tags:

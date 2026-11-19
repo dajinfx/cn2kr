@@ -2,6 +2,7 @@
 title: "중국 가오카오, AI가 부정행위를 잡는다"
 category: "중국사회"
 description: "AI 순찰 시스템으로 가오카오 부정행위 원천 차단"
+excerpt: "중국 대학입시인 '가오카오'에서 2025년부터 모든 시험장에 AI 지능형 실시간 순찰 시스템이 전면 도입됩니다. 수험생의 이상 행동이나 규정 위반 행위를 AI 순찰 시스템이 실시간으로 포착하고, 시험장 관계자가 즉시 대응하는 방식입니다. 수험생의..."
 date: 2026-11-17
 image: "/images/china-gaokao-ai-patrol-system.png"
 source: "https://www.sohu.com/a/899141197_122177654"
