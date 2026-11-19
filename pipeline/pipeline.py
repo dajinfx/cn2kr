@@ -1097,6 +1097,8 @@ def main():
         inline_imgs = (chosen or {}).get("images") or []
         if len(inline_imgs) > 1:
             article["content"], _ = download_inline_images(slug, article["content"], inline_imgs[1:], image_dir, referer=(chosen or {}).get("url"))
+        # 清理正文里未被替换的 [이미지: ...] 占位符（原文没图时直接删除，不留纯文本残留）
+        article["content"] = re.sub(r"\[이미지:\s*[^\]]+\]", "", article["content"]).strip()
         source_url = (chosen or {}).get("url") or ""
         videos = (chosen or {}).get("videos") or []
         path = save_markdown(article, image_url, slug, source_url, videos=videos)
