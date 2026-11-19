@@ -8,9 +8,9 @@
     <!-- 顶部导航 -->
     <header class="header">
       <div class="container header-inner">
-        <NuxtLink to="/" class="logo">cn<span class="dot">2</span>kr</NuxtLink>
+        <NuxtLink to="/" class="logo" @click="handleHomeClick">cn<span class="dot">2</span>kr</NuxtLink>
         <nav class="nav">
-          <NuxtLink to="/">홈</NuxtLink>
+          <NuxtLink to="/" @click="handleHomeClick">홈</NuxtLink>
           <NuxtLink v-for="cat in cats" :key="cat.slug" :to="`/category/${cat.slug}`">
             {{ cat.name }}
           </NuxtLink>
@@ -63,6 +63,15 @@
 import { CATEGORIES } from '~/composables/useCategories'
 
 const cats = CATEGORIES
+const route = useRoute()
+
+// 点击 logo/홈：已在首页时滚动到顶部（否则 NuxtLink 正常导航到首页）
+function handleHomeClick(e) {
+  if (route.path === '/') {
+    e.preventDefault()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
 
 // 只在 UAT 域名显示测试横幅（生产域名自动隐藏）
 const isUat = computed(() => {

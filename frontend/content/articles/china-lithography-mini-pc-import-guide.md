@@ -2,7 +2,7 @@
 
 title: "중국 노광기 모델 공개, 반도체 직구족이 봐야 할 현실"
 category: "중국 테크"
-description: "中 노광기 진전과 미니PC·신가전 직구 함정 정리"
+description: "중국 테크 뉴스를 매일 살펴보면 최근 가장 눈에 띄는 분야는 반도체 쪽입니다. 얼마 전 중국이 차세대 노광기 모델을 공개했다는 소식이 국내에도 짧게 알려졌습니다. 이 뉴스를 보면 과거 선전(深圳) 화창베이 전자상가에서 부품을 구매하던 상황이..."
 date: 2026-11-09
 image: "/images/china-lithography-mini-pc-import-guide.jpg?v=20261115"
 tags:
