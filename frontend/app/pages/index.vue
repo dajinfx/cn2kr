@@ -37,6 +37,7 @@
           </div>
           <div class="lead-body">
             <h1>{{ lead.title }}</h1>
+            <p v-if="lead.description" class="lead-desc">{{ lead.description }}</p>
             <span class="lead-meta">
               <span :style="{ color: categoryColor(lead.meta?.category) }">{{ lead.meta?.category }}</span>
               <span>·</span>
