@@ -708,7 +708,10 @@ def is_topic_duplicate(title, description, existing_titles):
         "只回答两个字：重复 或 不重复"
     )
     try:
-        raw = call_deepseek(prompt)
+        raw = call_deepseek(prompt).strip()
+        # 注意：「不重复」里也包含「重复」子串，必须先排除「不重复」，否则全部误判为重复
+        if "不重复" in raw:
+            return False
         return "重复" in raw
     except Exception as e:
         print(f"⚠️ 主题判重调用失败({e})，按不重复处理")
