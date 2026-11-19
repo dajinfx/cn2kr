@@ -56,7 +56,7 @@
                 <span class="rank-num">{{ i + 2 }}</span>
                 <div class="rank-text">
                   <h3>{{ p.title }}</h3>
-                  <p v-if="p.excerpt || p.description" class="rank-desc">{{ p.excerpt || p.description }}</p>
+                  <p v-if="p.description" class="rank-desc">{{ p.description }}</p>
                 </div>
               </div>
             </NuxtLink>
@@ -71,7 +71,7 @@
             </div>
             <div class="news-body">
               <h3>{{ p.title }}</h3>
-              <p v-if="p.excerpt || p.description" class="news-desc">{{ p.excerpt || p.description }}</p>
+              <p v-if="p.description" class="news-desc">{{ p.description }}</p>
               <span class="news-meta">
                 <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
                 <span>·</span>
