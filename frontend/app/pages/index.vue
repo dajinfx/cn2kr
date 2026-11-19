@@ -37,7 +37,6 @@
           </div>
           <div class="lead-body">
             <h1>{{ lead.title }}</h1>
-            <p v-if="lead.description" class="lead-desc">{{ lead.description }}</p>
             <span class="lead-meta">
               <span :style="{ color: categoryColor(lead.meta?.category) }">{{ lead.meta?.category }}</span>
               <span>·</span>
@@ -55,7 +54,10 @@
               </div>
               <div class="rank-body">
                 <span class="rank-num">{{ i + 2 }}</span>
-                <h3>{{ p.title }}</h3>
+                <div class="rank-text">
+                  <h3>{{ p.title }}</h3>
+                  <p v-if="p.description" class="rank-desc">{{ p.description }}</p>
+                </div>
               </div>
             </NuxtLink>
           </li>
@@ -69,6 +71,7 @@
             </div>
             <div class="news-body">
               <h3>{{ p.title }}</h3>
+              <p v-if="p.description" class="news-desc">{{ p.description }}</p>
               <span class="news-meta">
                 <span :style="{ color: categoryColor(p.meta?.category) }">{{ p.meta?.category }}</span>
                 <span>·</span>
